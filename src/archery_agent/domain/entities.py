@@ -11,7 +11,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from archery_agent.domain.enums import BowType, SessionMode
+from archery_agent.domain.enums import AccountRole, BowType, SessionMode
 from archery_agent.domain.ids import new_id
 
 # --------------------------------------------------------------------- base
@@ -65,8 +65,30 @@ class Archer(DomainRecord):
         default=False,
         description="Required before any record leaves the device for an archer under 18.",
     )
+    roles: frozenset[AccountRole] = Field(
+        default=frozenset({AccountRole.ARCHER}),
+        description="Capabilities this account holds. A coach who also shoots has both.",
+    )
+    #: Set when this archer is coached by someone else *inside* the system. A person who coaches
+    #: only themselves leaves this None and still keeps COACH in ``roles`` — that is the Q1
+    #: answer ("the coach is also an archer") expressed as data rather than as two accounts.
     coach_id: str | None = None
     created_at: datetime = Field(default_factory=utcnow)
+
+    @model_validator(mode="after")
+    def _roles_are_explicit(self) -> Archer:
+        if not self.roles:
+            raise ValueError(
+                "an account with no roles cannot read or write anything; declare at least one "
+                "of ARCHER, COACH, GUARDIAN"
+            )
+        if AccountRole.ARCHER not in self.roles and AccountRole.COACH not in self.roles:
+            raise ValueError("a guardian-only account is a viewer of an archer, not an archer")
+        return self
+
+    @property
+    def is_coach(self) -> bool:
+        return AccountRole.COACH in self.roles
 
     @property
     def is_minor(self) -> bool:

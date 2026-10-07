@@ -1,7 +1,18 @@
 # 00 — Product Brief
 
 **Working name:** AI Archery Assistant (v1 — compound only)
-**Status:** draft v0.1 — pending answers in `07-open-questions.md`
+**Status:** draft v0.2 — six questions answered 2026-10-08 (Q1, Q2, Q3, Q5, Q6, Q11); the
+remaining eleven are tracked in `07-open-questions.md` with their defaults in force.
+
+**Decisions in force**
+| # | Decision | Consequence |
+| --- | --- | --- |
+| Q1 | The v1 user is the **pair**, and a coach is usually also an archer | roles are capabilities on one account (`AccountRole`), not account types |
+| Q2 | Day-one job: **"is my setup right"** | M1 is re-scoped: capture + setup assessment first (docs/06) |
+| Q3 | Capture is **per-end phone taps** | ten-second-per-end budget is a hard constraint |
+| Q5 | The **recommended ten** parameters are mandatory; all 74 stay registered | `CORE_PARAMETERS` in `domain/parameters.py` |
+| Q6 | Timings are **self-estimated**, `reliability=low` | timing findings are provisional by construction |
+| Q11 | Load limits **warn, never block** | `sensors/load.py` behaviour is final for v1 |
 
 ---
 
@@ -27,8 +38,8 @@ from day one — a regression is only as good as the ledger it reads from.
 
 | User | Primary need | Frequency of use |
 | --- | --- | --- |
-| **Archer** (primary) | "What do I practise today, what number do I hit, what changed since last week?" | daily, at the range and at home |
-| **Coach** | Publish a method once, have students practise *that* method, see who is drifting | weekly, across several students |
+| **Archer** (primary) | "What do I practise today, what number do I hit, what changed since last week?" — and, at M1, "is my setup right?" | daily, at the range and at home |
+| **Coach** | Publish a method once, have students practise *that* method, see who is drifting. In practice the same person also shoots (Q1), so the app must switch hats without switching accounts | weekly, across several students |
 | **Parent / guardian** | Understand progress, consent to data handling (many archers are minors) | monthly |
 
 Explicit non-users in v1: recurve / barebow / traditional archers, pro-shop tuning

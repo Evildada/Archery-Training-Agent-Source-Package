@@ -13,6 +13,12 @@ Long format (`one row per observation`) rather than wide (`one column per parame
 
 ---
 
+> **Q1 (2026-10-08):** identity carries **roles**, not a type. `Archer.roles` is a non-empty set of
+> `AccountRole` (ARCHER · COACH · GUARDIAN); a coach who also shoots holds both, and a
+> self-coached archer has no `coach_id` but does have COACH. Writes must record which role
+> authorised them, because "the coach changed my draw weight" and "I changed my draw weight" are
+> different events in the regression, even when they are the same person.
+
 ## 1. Entity map
 
 ```

@@ -81,6 +81,14 @@ def test_cli_params_lists_registry(capsys: pytest.CaptureFixture[str]) -> None:
     assert "outcome.score_mean" not in out, "category filter must actually filter"
 
 
+def test_cli_params_core_shows_the_mandatory_set(capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["params", "--core", "--brief"]) == 0
+    out = capsys.readouterr().out
+    assert "11 parameter(s) registered" in out
+    assert "cycle.hold_time_s" in out
+    assert "bow.cam_timing_offset_in" not in out, "the mandatory set is not the whole registry"
+
+
 def test_cli_doctor_reports_no_failures(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["doctor"]) == 0
     out = capsys.readouterr().out

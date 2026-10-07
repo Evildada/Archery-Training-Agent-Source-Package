@@ -8,6 +8,12 @@ refuse to say more than that record supports.
 credentials.** The model goes in at M3 (`docs/06-roadmap.md`); everything below the model is
 already built, tested and enforced.
 
+**Decisions locked (2026-10-08, `docs/07-open-questions.md`):** the v1 user is the *pair* and a
+coach is usually also an archer (roles, not account types) · the day-one job is **"is my setup
+right"**, so M1 is capture + setup assessment · capture is per-end phone taps · the mandatory
+parameter set is the recommended ten, with all 74 kept in the registry · timings are
+self-estimated at `reliability=low` · load limits warn, never block.
+
 ```
 $ make setup && make check          # lint · types · architecture · schemas · tests · eval gates
 $ archery-agent doctor              # 11/11 checks: the harness auditing itself

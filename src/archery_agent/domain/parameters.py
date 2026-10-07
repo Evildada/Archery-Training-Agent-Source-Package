@@ -30,6 +30,25 @@ from archery_agent.domain.enums import (
     Reliability,
 )
 
+#: The parameters the archer committed to recording **every session** (Q5, answered 2026-10-08:
+#: "the recommended ten first, keep all 74 in the bank and review later"). Everything else stays
+#: registered and queryable — it is simply not mandatory, and the capture UI must not ask for it
+#: by default. ``SessionMode`` and distance are session fields, not registry parameters, so the
+#: ten concepts land as eleven keys (the group centre is stored as an x/y pair).
+CORE_PARAMETERS: tuple[str, ...] = (
+    "outcome.score_mean",
+    "outcome.group_center_x_cm",
+    "outcome.group_center_y_cm",
+    "load.arrows_shot",
+    "env.distance_m",
+    "load.rpe_1_10",
+    "mental.readiness_1_10",
+    "cycle.hold_time_s",
+    "tension.grip_pressure_1_5",
+    "aim.aim_float_radius_cm",
+    "mental.routine_adherence_pct",
+)
+
 #: key suffix -> canonical unit. Longest match wins, so ``_lb_s`` beats ``_s``.
 UNIT_SUFFIXES: dict[str, str] = {
     "_lb_reps": "lb·reps",
@@ -1190,5 +1209,13 @@ def validate_registry() -> None:
     # outcome parameters are the dependent variables: they must never be empty
     if not by_category(ParameterCategory.OUTCOME):
         problems.append("no OUTCOME parameters registered — the regression would have no target")
+    for key in CORE_PARAMETERS:
+        if key not in REGISTRY:
+            problems.append(
+                f"core parameter {key!r} is not registered — the mandatory capture set must be "
+                "a subset of the registry (Q5, docs/07-open-questions.md)"
+            )
+    if not CORE_PARAMETERS:
+        problems.append("the mandatory capture set is empty; nothing would ever be recorded")
     if problems:
         raise AssertionError("parameter registry problems:\n  - " + "\n  - ".join(problems))

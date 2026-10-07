@@ -24,6 +24,20 @@ class BowType(StrEnum):
         )
 
 
+class AccountRole(StrEnum):
+    """One person may hold several roles at once.
+
+    Answered at Q1 (docs/07-open-questions.md, 2026-10-08): the v1 user is *the pair*, and a
+    coach is usually also an archer. So a role is a capability, not an account type — the same
+    person can own templates (coach) and a ledger (archer), and the audit trail must say which
+    hat was on when a record was written.
+    """
+
+    ARCHER = "archer"
+    COACH = "coach"
+    GUARDIAN = "guardian"
+
+
 class SessionMode(StrEnum):
     BLANK_BALE = "blank_bale"
     GROUPING = "grouping"

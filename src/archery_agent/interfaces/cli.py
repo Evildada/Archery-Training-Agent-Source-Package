@@ -16,6 +16,7 @@ from archery_agent import __version__
 from archery_agent.agents import SPECS, Dispatcher, NullRunner
 from archery_agent.domain.enums import ParameterCategory, RiskLevel
 from archery_agent.domain.parameters import (
+    CORE_PARAMETERS,
     REGISTRY,
     by_category,
     low_capture_cost,
@@ -44,6 +45,12 @@ def _cmd_params(args: argparse.Namespace) -> int:
     if args.low_cost:
         cheap = {d.key for d in low_capture_cost()}
         definitions = [d for d in definitions if d.key in cheap]
+    if args.core:
+        definitions = [d for d in definitions if d.key in CORE_PARAMETERS]
+        print(
+            "the mandatory capture set (Q5): eleven keys covering ten concepts. Everything else "
+            "stays registered and can be promoted later.\n"
+        )
 
     print(f"{len(definitions)} parameter(s) registered\n")
     header = f"{'key':38} {'unit':8} {'better':7} {'cost':7} label"
@@ -296,6 +303,9 @@ def build_parser() -> argparse.ArgumentParser:
     params.add_argument("--category", choices=[c.value for c in ParameterCategory], default=None)
     params.add_argument("--low-cost", action="store_true", help="only cheap-to-capture parameters")
     params.add_argument("--brief", action="store_true", help="omit per-parameter notes")
+    params.add_argument(
+        "--core", action="store_true", help="only the mandatory per-session capture set (Q5)"
+    )
     params.set_defaults(func=_cmd_params)
 
     doctor = sub.add_parser("doctor", help="run harness self-checks")

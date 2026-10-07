@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from archery_agent.domain.enums import CaptureCost, ParameterCategory, ParameterKind
 from archery_agent.domain.parameters import (
+    CORE_PARAMETERS,
     REGISTRY,
     UNIT_SUFFIXES,
     UnknownParameterError,
@@ -100,3 +101,37 @@ def test_outcome_parameters_exist() -> None:
     outcomes = by_category(ParameterCategory.OUTCOME)
     assert any(d.key == "outcome.score_mean" for d in outcomes)
     assert any(d.key == "outcome.group_radius_cm" for d in outcomes)
+
+
+def test_core_capture_set_is_a_small_registered_subset() -> None:
+    """Q5 (docs/07-open-questions.md): the mandatory set is small, the registry stays large."""
+    assert 8 <= len(CORE_PARAMETERS) <= 12, (
+        "a mandatory set larger than a dozen items will not survive contact with a range session"
+    )
+    for key in CORE_PARAMETERS:
+        assert key in REGISTRY, f"{key} is mandatory but not registered"
+        assert REGISTRY[key].capture_cost is not CaptureCost.HIGH, (
+            f"{key} is in the mandatory set but expensive to capture"
+        )
+
+
+def test_core_capture_set_covers_the_regression() -> None:
+    """The mandatory set must contain an outcome, a load measure and at least one timing."""
+    categories = {REGISTRY[key].category for key in CORE_PARAMETERS}
+    assert ParameterCategory.OUTCOME in categories
+    assert ParameterCategory.LOAD in categories
+    assert ParameterCategory.CYCLE_TIMING in categories
+
+
+def test_the_q5_review_cannot_silently_drop_a_mandatory_key() -> None:
+    """Re-registering a core key under a different name must fail loudly, not silently."""
+    import archery_agent.domain.parameters as params
+
+    saved = params.CORE_PARAMETERS
+    try:
+        params.CORE_PARAMETERS = (*saved, "cycle.hold_time_seconds")
+        with pytest.raises(AssertionError, match="not registered"):
+            params.validate_registry()
+    finally:
+        params.CORE_PARAMETERS = saved
+    params.validate_registry()

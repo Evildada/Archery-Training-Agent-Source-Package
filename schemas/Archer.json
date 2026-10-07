@@ -1,5 +1,15 @@
 {
   "$defs": {
+    "AccountRole": {
+      "description": "One person may hold several roles at once.\n\nAnswered at Q1 (docs/07-open-questions.md, 2026-10-08): the v1 user is *the pair*, and a\ncoach is usually also an archer. So a role is a capability, not an account type \u2014 the same\nperson can own templates (coach) and a ledger (archer), and the audit trail must say which\nhat was on when a record was written.",
+      "enum": [
+        "archer",
+        "coach",
+        "guardian"
+      ],
+      "title": "AccountRole",
+      "type": "string"
+    },
     "BowType": {
       "description": "v1 is compound-only by design decision (AGENTS.md rule 1).",
       "enum": [
@@ -89,6 +99,18 @@
       ],
       "title": "Handedness",
       "type": "string"
+    },
+    "roles": {
+      "default": [
+        "archer"
+      ],
+      "description": "Capabilities this account holds. A coach who also shoots has both.",
+      "items": {
+        "$ref": "#/$defs/AccountRole"
+      },
+      "title": "Roles",
+      "type": "array",
+      "uniqueItems": true
     }
   },
   "required": [

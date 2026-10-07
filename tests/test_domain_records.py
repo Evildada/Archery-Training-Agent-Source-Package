@@ -15,7 +15,12 @@ from archery_agent.domain.entities import (
     Shot,
     canonical_compound_template,
 )
-from archery_agent.domain.enums import ObservationSource, Reliability, SessionMode
+from archery_agent.domain.enums import (
+    AccountRole,
+    ObservationSource,
+    Reliability,
+    SessionMode,
+)
 from archery_agent.domain.ledger import ParameterObservation
 
 
@@ -156,3 +161,19 @@ def test_template_rejects_parameters_that_are_not_registered() -> None:
             definition="Draw the bow.",
             observe_params=("cycle.draw_speed",),
         )
+
+
+def test_a_coach_may_also_be_an_archer() -> None:
+    """Q1 (docs/07-open-questions.md): the v1 user is the *pair*, and the coach shoots too."""
+    coach = Archer(
+        display_name="Coach who shoots",
+        roles=frozenset({AccountRole.ARCHER, AccountRole.COACH}),
+    )
+    assert coach.is_coach
+    assert AccountRole.ARCHER in coach.roles
+    assert coach.coach_id is None, "self-coached is not the same as being coached by someone else"
+
+
+def test_roles_cannot_be_empty() -> None:
+    with pytest.raises(ValidationError, match="roles"):
+        Archer(display_name="Nobody", roles=frozenset())
