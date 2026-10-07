@@ -1,0 +1,518 @@
+{
+  "$defs": {
+    "ArrowSetup": {
+      "additionalProperties": false,
+      "properties": {
+        "arrow_id": {
+          "title": "Arrow Id",
+          "type": "string"
+        },
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "fletching_angle_deg": {
+          "anyOf": [
+            {
+              "maximum": 15.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Angle Deg"
+        },
+        "fletching_count": {
+          "anyOf": [
+            {
+              "maximum": 4,
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Count"
+        },
+        "fletching_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "vanes_2in",
+                "vanes_2_5in",
+                "vanes_3in",
+                "feathers",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Type"
+        },
+        "insert_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Insert Mass Grains"
+        },
+        "measured_total_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Weigh a finished arrow. Catalog masses are optimistic; this is the value the simulator must prefer when both exist.",
+          "title": "Measured Total Mass Grains"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "nock_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nock Mass Grains"
+        },
+        "point_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point Mass Grains"
+        },
+        "shaft_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Length In"
+        },
+        "shaft_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Mass Grains"
+        },
+        "shaft_spine_thou": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Static spine deflection in thousandths of an inch.",
+          "title": "Shaft Spine Thou"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "ArrowSetup",
+      "type": "object"
+    },
+    "Bow": {
+      "additionalProperties": false,
+      "properties": {
+        "axle_to_axle_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axle To Axle In"
+        },
+        "bow_id": {
+          "title": "Bow Id",
+          "type": "string"
+        },
+        "bow_mass_oz": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bow Mass Oz"
+        },
+        "bow_type": {
+          "$ref": "#/$defs/BowType",
+          "default": "compound"
+        },
+        "brace_height_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Brace Height In"
+        },
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "cam_system": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cam System"
+        },
+        "draw_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Length In"
+        },
+        "draw_weight_lb": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Weight Lb"
+        },
+        "let_off_pct": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Let Off Pct"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "Bow",
+      "type": "object"
+    },
+    "BowType": {
+      "description": "v1 is compound-only by design decision (AGENTS.md rule 1).",
+      "enum": [
+        "compound"
+      ],
+      "title": "BowType",
+      "type": "string"
+    },
+    "EquipmentChange": {
+      "additionalProperties": false,
+      "description": "One field that differs between two versions. Signed where numeric.",
+      "properties": {
+        "delta": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "new - old, when both parse as numbers. Signed, so direction is not lost.",
+          "title": "Delta"
+        },
+        "field": {
+          "description": "Dotted path, e.g. 'arrow.point_mass_grains'.",
+          "title": "Field",
+          "type": "string"
+        },
+        "new_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Value"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "old_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old Value"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "title": "EquipmentChange",
+      "type": "object"
+    },
+    "EquipmentSnapshot": {
+      "additionalProperties": false,
+      "description": "The bow/release/arrow triple, comparable across versions.\n\nA thin wrapper rather than three loose fields so that :func:`_flatten` has exactly one shape\nto walk, and so that adding a component later (a rest, a scope) is a field here plus a\nregistry key \u2014 not a change to the diff algorithm.",
+      "properties": {
+        "accessories": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Accessories",
+          "type": "object"
+        },
+        "arrow": {
+          "$ref": "#/$defs/ArrowSetup"
+        },
+        "bow": {
+          "$ref": "#/$defs/Bow"
+        },
+        "release": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Release"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "bow",
+        "arrow"
+      ],
+      "title": "EquipmentSnapshot",
+      "type": "object"
+    },
+    "Release": {
+      "additionalProperties": false,
+      "properties": {
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "release_id": {
+          "title": "Release Id",
+          "type": "string"
+        },
+        "release_type": {
+          "enum": [
+            "hinge",
+            "thumb_button",
+            "caliper",
+            "resistance"
+          ],
+          "title": "Release Type",
+          "type": "string"
+        },
+        "sear_travel_1_5": {
+          "anyOf": [
+            {
+              "maximum": 5.0,
+              "minimum": 1.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sear Travel 1 5"
+        }
+      },
+      "required": [
+        "release_type",
+        "brand",
+        "model"
+      ],
+      "title": "Release",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One append-only, dated state of an archer's equipment.",
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "changes": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/EquipmentChange"
+      },
+      "title": "Changes",
+      "type": "array"
+    },
+    "effective_from": {
+      "description": "When this setup started being shot. Not always when it was typed in.",
+      "format": "date-time",
+      "title": "Effective From",
+      "type": "string"
+    },
+    "equipment": {
+      "$ref": "#/$defs/EquipmentSnapshot"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "reason": {
+      "default": "",
+      "description": "Why it changed. Free text, but the report shows it, so 'no idea' is an acceptable and useful answer.",
+      "title": "Reason",
+      "type": "string"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes"
+    },
+    "version": {
+      "description": "1 for the first recorded setup, then 2, 3, ...",
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "version_id": {
+      "title": "Version Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "archer_id",
+    "version",
+    "equipment"
+  ],
+  "title": "EquipmentVersion",
+  "type": "object"
+}

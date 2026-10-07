@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "ArrowSetupInput": {
+      "additionalProperties": false,
+      "description": "A complete arrow build. Mirror of :class:`domain.entities.ArrowSetup`, kept flat.",
+      "properties": {
+        "brand": {
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "insert_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Insert Mass Grains"
+        },
+        "measured_total_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Measured Total Mass Grains"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "nock_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nock Mass Grains"
+        },
+        "point_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point Mass Grains"
+        },
+        "shaft_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 34.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Length In"
+        },
+        "shaft_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Mass Grains"
+        },
+        "shaft_spine_thou": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Spine Thou"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "ArrowSetupInput",
+      "type": "object"
+    },
+    "BowInput": {
+      "additionalProperties": false,
+      "properties": {
+        "axle_to_axle_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axle To Axle In"
+        },
+        "brace_height_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Brace Height In"
+        },
+        "brand": {
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "draw_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Length In"
+        },
+        "draw_weight_lb": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Weight Lb"
+        },
+        "let_off_pct": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Let Off Pct"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "BowInput",
+      "type": "object"
+    },
+    "ReleaseInput": {
+      "additionalProperties": false,
+      "properties": {
+        "brand": {
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "release_type": {
+          "default": "thumb_button",
+          "title": "Release Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "ReleaseInput",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Record a new, dated version of the archer's setup.",
+  "properties": {
+    "accessories": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Accessories",
+      "type": "object"
+    },
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "arrow": {
+      "$ref": "#/$defs/ArrowSetupInput"
+    },
+    "bow": {
+      "$ref": "#/$defs/BowInput"
+    },
+    "effective_from": {
+      "default": "",
+      "description": "ISO date the setup started being shot. Empty = now. Set it in the past when typing in a change that already happened.",
+      "title": "Effective From",
+      "type": "string"
+    },
+    "reason": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Reason",
+      "type": "string"
+    },
+    "release": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReleaseInput"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "archer_id",
+    "bow",
+    "arrow"
+  ],
+  "title": "EquipmentRecordInput",
+  "type": "object"
+}

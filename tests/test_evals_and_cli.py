@@ -133,3 +133,100 @@ def test_cli_simulate_prints_assumptions(capsys: pytest.CaptureFixture[str]) -> 
     assert "FOC" in out
     assert "assumptions:" in out
     assert "fps/lb" in out
+
+
+# ------------------------------------------------------- M1: equipment + setup report
+
+
+def _run_cli(capsys: pytest.CaptureFixture[str], argv: list[str]) -> tuple[int, str]:
+    from archery_agent.interfaces.cli import main as cli_main
+
+    code = cli_main(argv)
+    return code, capsys.readouterr().out
+
+
+def test_equipment_cli_prints_a_test_for_every_estimate(
+    tmp_path: pytest.TempPathFactory, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = str(tmp_path / "archery.db")  # type: ignore[operator]
+    code, _ = _run_cli(
+        capsys,
+        [
+            "equipment",
+            "record",
+            "--archer",
+            "arc_cli",
+            "--db",
+            db,
+            "--bow-brand",
+            "Test",
+            "--bow-model",
+            "Riser",
+            "--draw-weight",
+            "55",
+            "--draw-length",
+            "28.5",
+            "--arrow-brand",
+            "Easton",
+            "--arrow-model",
+            "X10",
+            "--spine",
+            "340",
+            "--length",
+            "28.5",
+            "--shaft-mass",
+            "180",
+        ],
+    )
+    assert code == 0
+
+    code, out = _run_cli(capsys, ["equipment", "assess", "--archer", "arc_cli", "--db", db])
+    assert code == 0
+    assert "[estimated]" in out or "[unverified]" in out
+    assert "grain scale" in out, "the weighing test must be in the archer's output"
+    assert "Not answerable yet" in out
+
+
+def test_assessing_without_a_recorded_setup_refuses_to_invent_one(
+    tmp_path: pytest.TempPathFactory, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = str(tmp_path / "empty.db")  # type: ignore[operator]
+    code, out = _run_cli(capsys, ["equipment", "assess", "--archer", "arc_none", "--db", db])
+    assert code == 1
+    assert "no equipment recorded" in out.lower() or "Nothing to assess" in out
+
+
+def test_history_shows_the_delta_between_versions(
+    tmp_path: pytest.TempPathFactory, capsys: pytest.CaptureFixture[str]
+) -> None:
+    db = str(tmp_path / "archery.db")  # type: ignore[operator]
+    base = [
+        "equipment",
+        "record",
+        "--archer",
+        "arc_hist",
+        "--db",
+        db,
+        "--bow-brand",
+        "Test",
+        "--bow-model",
+        "Riser",
+        "--arrow-brand",
+        "Easton",
+        "--arrow-model",
+        "X10",
+        "--spine",
+        "340",
+        "--length",
+        "28.5",
+        "--shaft-mass",
+        "180",
+    ]
+    assert _run_cli(capsys, [*base, "--point-mass", "100"])[0] == 0
+    assert _run_cli(capsys, [*base, "--point-mass", "125", "--reason", "heavier point"])[0] == 0
+
+    code, out = _run_cli(capsys, ["equipment", "history", "--archer", "arc_hist", "--db", db])
+    assert code == 0
+    assert "v1" in out and "v2" in out
+    assert "+25.00" in out, "the signed delta is the change-point the later regression needs"
+    assert "heavier point" in out

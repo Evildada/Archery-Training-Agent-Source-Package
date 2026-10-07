@@ -1,14 +1,31 @@
 """Persistence. The only layer that touches a disk.
 
-M0 ships an in-memory ledger that already enforces every T0/T1 sensor, so the rest of the system
-can be built and tested against the real write path. SQLite lands at M1 behind the same
-:class:`~archery_agent.store.base.LedgerStore` protocol — swapping it must not change a single
-call site above this layer.
+Two interchangeable implementations of :class:`~archery_agent.store.base.LedgerStore`:
+:class:`~archery_agent.store.memory.InMemoryLedger` for the deterministic demo and the tests, and
+:class:`~archery_agent.store.sqlite.SqliteStore` for real archers. They run the *same* sensors on
+the write path, so a bug cannot hide in one of them.
+
+The equipment history lives behind
+:class:`~archery_agent.store.base.EquipmentStore`, and neither implementation exposes a way to
+update or delete a recorded row — append-only is the storage contract, not an implementation
+detail (see the SQLite triggers in ``store/sqlite.py``).
 """
 
 from __future__ import annotations
 
-from archery_agent.store.base import LedgerStore, ObservationFilter
+from archery_agent.store.base import (
+    EquipmentStore,
+    LedgerStore,
+    ObservationFilter,
+)
 from archery_agent.store.memory import InMemoryLedger
+from archery_agent.store.sqlite import SqliteStore, append_only_probe
 
-__all__ = ["InMemoryLedger", "LedgerStore", "ObservationFilter"]
+__all__ = [
+    "EquipmentStore",
+    "InMemoryLedger",
+    "LedgerStore",
+    "ObservationFilter",
+    "SqliteStore",
+    "append_only_probe",
+]

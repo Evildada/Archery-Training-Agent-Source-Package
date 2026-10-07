@@ -38,6 +38,11 @@ from archery_agent.domain.entities import (
     ShooterProfile,
     Shot,
 )
+from archery_agent.domain.equipment import (
+    EquipmentChange,
+    EquipmentSnapshot,
+    EquipmentVersion,
+)
 from archery_agent.domain.insight import Claim, EvidenceRef, Insight
 from archery_agent.domain.ledger import ObservationBatch, ParameterObservation
 from archery_agent.domain.parameters import ParameterDefinition
@@ -49,6 +54,12 @@ from archery_agent.domain.standards import (
 )
 from archery_agent.runtime.events import Event
 from archery_agent.runtime.loop import PlannerDecision, TurnResult
+from archery_agent.sensors.setup_assessment import Experiment, Finding, SetupReport
+from archery_agent.tools.impl.equipment_tools import (
+    EquipmentAssessInput,
+    EquipmentHistoryInput,
+    EquipmentRecordInput,
+)
 from archery_agent.tools.impl.guard_tools import TextInput
 from archery_agent.tools.impl.knowledge_tools import KnowledgeSearchInput
 from archery_agent.tools.impl.ledger_tools import (
@@ -77,6 +88,9 @@ SCHEMA_ROOT = Path("schemas")
 MODELS: tuple[type[Any], ...] = (
     # domain
     Archer,
+    EquipmentVersion,
+    EquipmentChange,
+    EquipmentSnapshot,
     ShooterProfile,
     ProfileChange,
     Bow,
@@ -99,6 +113,12 @@ MODELS: tuple[type[Any], ...] = (
     EvidenceRef,
     Claim,
     Insight,
+    EquipmentVersion,
+    EquipmentChange,
+    EquipmentSnapshot,
+    Finding,
+    Experiment,
+    SetupReport,
     # runtime
     Event,
     TurnResult,
@@ -119,6 +139,9 @@ MODELS: tuple[type[Any], ...] = (
     StandardEvaluateInput,
     InstructionDraftInput,
     KnowledgeSearchInput,
+    EquipmentRecordInput,
+    EquipmentHistoryInput,
+    EquipmentAssessInput,
     TextInput,
 )
 

@@ -14,6 +14,7 @@ from typing import Protocol, runtime_checkable
 from pydantic import BaseModel, ConfigDict
 
 from archery_agent.domain.enums import ObservationSource
+from archery_agent.domain.equipment import EquipmentVersion
 from archery_agent.domain.ledger import ObservationBatch, ParameterObservation
 
 
@@ -49,4 +50,27 @@ class LedgerStore(Protocol):
 
     def series(self, key: str, *, archer_id: str | None = None) -> tuple[ParameterObservation, ...]:
         """All observations of one parameter, oldest first."""
+        ...
+
+
+@runtime_checkable
+class EquipmentStore(Protocol):
+    """Equipment as history (docs/06-roadmap.md M1, domain/equipment.py).
+
+    There is deliberately no ``update_version`` and no ``delete_version``: the interface a caller
+    codes against cannot express "change history", so a caller cannot ask for it by accident.
+    """
+
+    def append_version(self, version: EquipmentVersion) -> EquipmentVersion:
+        """Record the next version, built by ``domain.equipment.record_version``."""
+        ...
+
+    def versions(self, archer_id: str) -> tuple[EquipmentVersion, ...]:
+        """Every version ever recorded for this archer, oldest first."""
+        ...
+
+    def current_version(self, archer_id: str) -> EquipmentVersion | None: ...
+
+    def version_at(self, archer_id: str, moment: datetime) -> EquipmentVersion | None:
+        """What was on the bow at ``moment``. Answers questions about the past, not the present."""
         ...

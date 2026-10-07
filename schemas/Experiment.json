@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A question the system cannot answer yet, and the smallest test that would unlock it.",
+  "properties": {
+    "needs": {
+      "title": "Needs",
+      "type": "string"
+    },
+    "question": {
+      "title": "Question",
+      "type": "string"
+    },
+    "unlocks": {
+      "title": "Unlocks",
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "needs",
+    "unlocks"
+  ],
+  "title": "Experiment",
+  "type": "object"
+}

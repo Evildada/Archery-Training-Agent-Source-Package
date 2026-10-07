@@ -87,6 +87,22 @@ Coaches can publish their own template; the *phase keys* are the shared vocabula
 makes "my coach's method" comparable across students (this is requirement #2 of the usage
 notes: unify teaching method).
 
+### EquipmentVersion (append-only, dated) — implemented at M1
+
+`EquipmentVersion: version_id · archer_id · version (1,2,3…) · equipment{bow, release, arrow,
+accessories} · effective_from · recorded_at · reason · changes[] · supersedes`
+
+`effective_from` is when the setup started being shot; `recorded_at` is when it was typed in. They
+differ whenever someone enters a change that already happened, and the statistics use
+`effective_from`. `changes[]` holds the field-level delta against the previous version, computed
+once at write time by `domain/equipment.py::diff_equipment` — recomputing it later is how a
+change-point analysis drifts when a field is renamed.
+
+Nothing is overwritten: the SQLite tables carry triggers that abort `UPDATE` and `DELETE`, so a
+"fix the typo" statement fails loudly instead of rewriting history. Recording a version also
+publishes its registry rows (draw weight, spine, masses) into the ledger with
+`equipment_set_id`, which is what connects "which setup" to "which arrows".
+
 ### Session
 `session_id · archer_id · started_at · mode · distance_m · indoor_outdoor · target_face_id ·
 arrow_count · duration_min · planned_arrow_count · focus_tags[] · cycle_template_id ·
