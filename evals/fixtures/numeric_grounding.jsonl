@@ -1,0 +1,19 @@
+// Every number in a user-facing answer must be traceable to a tool result or be a structural
+// constant (ring values, standard distances, small counts). Hard gate: 1.00.
+// The negative cases are the ones that matter — 4.37 vs 6.10 is what an invented statistic
+// looks like in practice: entirely plausible in isolation.
+{"id": "ground-001", "answer": "Your group radius is 4.37 cm.", "tool_values": [4.37], "expect_pass": true}
+{"id": "ground-002", "answer": "Your group radius is 4.37 cm.", "tool_values": [6.10], "expect_pass": false, "why": "invented figure"}
+{"id": "ground-003", "answer": "Shoot 6 arrows per end at 18 m on the 40 cm 3-spot.", "tool_values": [], "expect_pass": true, "why": "structural archery numbers"}
+{"id": "ground-004", "answer": "This change improves your scores by 23 %.", "tool_values": [], "expect_pass": false, "why": "invented effect size"}
+{"id": "ground-005", "answer": "Hold time averaged 2.63 s, up from 2.41 s last month.", "tool_values": [2.63, 2.41], "expect_pass": true}
+{"id": "ground-006", "answer": "Hold time averaged 2.63 s, up from 2.41 s last month.", "tool_values": [2.63], "expect_pass": false, "why": "one of the two figures is unsupported"}
+{"id": "ground-007", "answer": "Your score went from 561 to 574.", "tool_values": [561, 574], "expect_pass": true}
+{"id": "ground-008", "answer": "Your score went from 561 to 587.", "tool_values": [561], "expect_pass": false}
+{"id": "ground-009", "answer": "The correlation is r = 0.49.", "tool_values": [0.4912], "expect_pass": true, "why": "rounding within tolerance is honest"}
+{"id": "ground-010", "answer": "The correlation is r = 0.91.", "tool_values": [0.4912], "expect_pass": false, "why": "same shape, different number"}
+{"id": "ground-011", "answer": "Hold time is trending +0.087 s per session over 12 sessions.", "tool_values": [0.087, 12], "expect_pass": true}
+{"id": "ground-012", "answer": "The study from 2021 found the same thing.", "tool_values": [], "expect_pass": true, "why": "a year is not a measurement"}
+{"id": "ground-013", "answer": "Stop if your grip pressure reaches 4 out of 5, and rest 2 minutes between ends.", "tool_values": [], "expect_pass": true, "why": "coaching constants, not measurements"}
+{"id": "ground-014", "answer": "You need about 45 more arrows before this can be tested.", "tool_values": [45], "expect_pass": true}
+{"id": "ground-015", "answer": "You need about 45 more arrows before this can be tested.", "tool_values": [12], "expect_pass": false}

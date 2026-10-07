@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "TuneSymptom": {
+      "enum": [
+        "paper_tear_right",
+        "paper_tear_left",
+        "paper_tear_high",
+        "paper_tear_low",
+        "group_right",
+        "group_left",
+        "group_high",
+        "group_low",
+        "vertical_spread",
+        "horizontal_spread",
+        "nock_high",
+        "nock_low"
+      ],
+      "title": "TuneSymptom",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arrows_observed": {
+      "anyOf": [
+        {
+          "maximum": 200,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Arrows Observed"
+    },
+    "distance_m": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Distance M"
+    },
+    "group_radius_cm": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Group Radius Cm"
+    },
+    "symptom": {
+      "$ref": "#/$defs/TuneSymptom"
+    }
+  },
+  "required": [
+    "symptom"
+  ],
+  "title": "TuneAdviceInput",
+  "type": "object"
+}

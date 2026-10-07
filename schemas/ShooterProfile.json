@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The slow-changing half of the parameter set: *who this archer is, technically*.\n\nEdits here are **events**, not overwrites (docs/03 \u00a72): the S5 regression needs the date\nof a technique change as a change-point, so `ProfileChange` records wrap these edits.",
+  "properties": {
+    "aiming_style": {
+      "default": "scope_ring",
+      "enum": [
+        "scope_ring",
+        "pin_float",
+        "hybrid"
+      ],
+      "title": "Aiming Style",
+      "type": "string"
+    },
+    "anchor_type": {
+      "default": "release_hand_behind_jaw",
+      "enum": [
+        "release_hand_behind_jaw",
+        "valley_wall",
+        "nose_on_string",
+        "custom"
+      ],
+      "title": "Anchor Type",
+      "type": "string"
+    },
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "cycle_template_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cycle Template Id"
+    },
+    "draw_length_in": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draw Length In"
+    },
+    "draw_weight_lb": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draw Weight Lb"
+    },
+    "equipment_set_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Equipment Set Id"
+    },
+    "hold_strategy": {
+      "default": "expansion_through_wall",
+      "enum": [
+        "expansion_through_wall",
+        "timed_hold",
+        "surprise_break"
+      ],
+      "title": "Hold Strategy",
+      "type": "string"
+    },
+    "let_off_pct": {
+      "anyOf": [
+        {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Let Off Pct"
+    },
+    "profile_id": {
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "release_type": {
+      "default": "thumb_button",
+      "enum": [
+        "hinge",
+        "thumb_button",
+        "caliper",
+        "resistance"
+      ],
+      "title": "Release Type",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "archer_id"
+  ],
+  "title": "ShooterProfile",
+  "type": "object"
+}

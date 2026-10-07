@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "band_hi": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Hi"
+    },
+    "band_lo": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Lo"
+    },
+    "difficulty": {
+      "default": "development",
+      "title": "Difficulty",
+      "type": "string"
+    },
+    "focus_tag": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Focus Tag"
+    },
+    "metric_key": {
+      "title": "Metric Key",
+      "type": "string"
+    },
+    "n_min": {
+      "default": 6,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "N Min",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 120,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "operator": {
+      "description": "lte | gte | in_band | equals_band",
+      "title": "Operator",
+      "type": "string"
+    },
+    "rationale": {
+      "default": "",
+      "title": "Rationale",
+      "type": "string"
+    },
+    "threshold": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold"
+    },
+    "window": {
+      "default": "session",
+      "description": "shot|end|session|rolling_3_ends|rolling_7d",
+      "title": "Window",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "metric_key",
+    "operator"
+  ],
+  "title": "StandardDraftInput",
+  "type": "object"
+}

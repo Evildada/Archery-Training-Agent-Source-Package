@@ -1,0 +1,207 @@
+{
+  "$defs": {
+    "BetterDirection": {
+      "enum": [
+        "higher",
+        "lower",
+        "band",
+        "none"
+      ],
+      "title": "BetterDirection",
+      "type": "string"
+    },
+    "CaptureCost": {
+      "enum": [
+        "free",
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "CaptureCost",
+      "type": "string"
+    },
+    "ObservationSource": {
+      "enum": [
+        "self_reported",
+        "coach_rated",
+        "sensor",
+        "derived",
+        "imported"
+      ],
+      "title": "ObservationSource",
+      "type": "string"
+    },
+    "ParameterCategory": {
+      "enum": [
+        "anthropometric",
+        "bow_setup",
+        "release",
+        "arrow",
+        "cycle_timing",
+        "cycle_tension",
+        "aim",
+        "mental",
+        "outcome",
+        "load",
+        "environment",
+        "adherence"
+      ],
+      "title": "ParameterCategory",
+      "type": "string"
+    },
+    "ParameterKind": {
+      "enum": [
+        "ratio",
+        "interval",
+        "ordinal",
+        "categorical",
+        "count",
+        "boolean"
+      ],
+      "title": "ParameterKind",
+      "type": "string"
+    },
+    "Reliability": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "Reliability",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One row of the registry.",
+  "properties": {
+    "affects": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Affects",
+      "type": "array"
+    },
+    "better": {
+      "$ref": "#/$defs/BetterDirection",
+      "default": "none"
+    },
+    "capture_cost": {
+      "$ref": "#/$defs/CaptureCost",
+      "default": "low"
+    },
+    "category": {
+      "$ref": "#/$defs/ParameterCategory"
+    },
+    "key": {
+      "pattern": "^[a-z][a-z0-9_]*\\.[a-z0-9_]+$",
+      "title": "Key",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/ParameterKind"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "plausible_range": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physical plausibility (typo guard), never a quality judgement.",
+      "title": "Plausible Range"
+    },
+    "reliability_default": {
+      "$ref": "#/$defs/Reliability",
+      "default": "medium"
+    },
+    "scale_anchor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "For ordinals: what 1 and the top of the scale mean.",
+      "title": "Scale Anchor"
+    },
+    "source_kinds": {
+      "default": [
+        "self_reported"
+      ],
+      "items": {
+        "$ref": "#/$defs/ObservationSource"
+      },
+      "title": "Source Kinds",
+      "type": "array"
+    },
+    "target_band": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Target Band"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    }
+  },
+  "required": [
+    "key",
+    "label",
+    "category",
+    "kind"
+  ],
+  "title": "ParameterDefinition",
+  "type": "object"
+}

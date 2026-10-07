@@ -1,0 +1,93 @@
+; Mechanically enforced architecture for the archery training agent.
+; Run with:  lint-imports   (or `make lint-arch`)
+; Rationale: docs/01-harness-architecture.md
+;
+; The layers contract makes a whole class of design drift impossible to merge:
+; domain types can never reach for a database, a physics function can never
+; grow a side effect, and the LLM-facing surface can never bypass the tool layer.
+
+[importlinter]
+root_package = archery_agent
+include_external_packages = True
+
+; import-linter reads this list from the HIGHEST layer down: a module may import lower
+; layers, never higher ones. Written as a partial order (docs/01 §1) it is:
+;   domain < sim < sensors < store < tools < agents < runtime < interfaces
+[importlinter:contract:layers]
+name = Layered architecture: interfaces > runtime > agents > tools > store > sensors > sim > domain
+type = layers
+layers =
+    archery_agent.interfaces
+    archery_agent.runtime
+    archery_agent.agents
+    archery_agent.tools
+    archery_agent.store
+    archery_agent.sensors
+    archery_agent.sim
+    archery_agent.domain
+
+[importlinter:contract:domain-purity]
+name = The domain layer is pure: no IO, no framework, no upward imports
+type = forbidden
+source_modules =
+    archery_agent.domain
+forbidden_modules =
+    archery_agent.sim
+    archery_agent.sensors
+    archery_agent.store
+    archery_agent.tools
+    archery_agent.agents
+    archery_agent.runtime
+    archery_agent.interfaces
+    sqlite3
+    argparse
+    requests
+    httpx
+    openai
+    anthropic
+
+[importlinter:contract:sim-purity]
+name = The simulator is deterministic physics: no IO, no model, no sensor policy
+type = forbidden
+source_modules =
+    archery_agent.sim
+forbidden_modules =
+    archery_agent.store
+    archery_agent.tools
+    archery_agent.agents
+    archery_agent.runtime
+    archery_agent.interfaces
+    sqlite3
+    requests
+    httpx
+    openai
+    anthropic
+
+[importlinter:contract:sensors-purity]
+name = Sensors are deterministic and side-effect free
+type = forbidden
+source_modules =
+    archery_agent.sensors
+forbidden_modules =
+    archery_agent.store
+    archery_agent.tools
+    archery_agent.agents
+    archery_agent.runtime
+    archery_agent.interfaces
+    sqlite3
+    requests
+    httpx
+
+[importlinter:contract:llm-isolation]
+name = Only the runtime layer may talk to a model provider
+type = forbidden
+source_modules =
+    archery_agent.domain
+    archery_agent.sim
+    archery_agent.sensors
+    archery_agent.store
+    archery_agent.tools
+forbidden_modules =
+    openai
+    anthropic
+    litellm

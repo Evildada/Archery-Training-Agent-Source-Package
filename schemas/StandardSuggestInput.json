@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "SessionMode": {
+      "enum": [
+        "blank_bale",
+        "grouping",
+        "scoring",
+        "competition_sim",
+        "distance_move",
+        "shot_execution_volume",
+        "gym",
+        "mixed"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "distance_m": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Distance M"
+    },
+    "metric_key": {
+      "title": "Metric Key",
+      "type": "string"
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SessionMode"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "name": {
+      "anyOf": [
+        {
+          "maxLength": 120,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "window_days": {
+      "default": 90,
+      "maximum": 730,
+      "minimum": 14,
+      "title": "Window Days",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "archer_id",
+    "metric_key"
+  ],
+  "title": "StandardSuggestInput",
+  "type": "object"
+}

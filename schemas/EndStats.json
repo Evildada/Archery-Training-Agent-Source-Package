@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Derived per-end summary. Computed in pure functions, never by the model.",
+  "properties": {
+    "arrows": {
+      "minimum": 0,
+      "title": "Arrows",
+      "type": "integer"
+    },
+    "end_id": {
+      "title": "End Id",
+      "type": "string"
+    },
+    "group_center_x_cm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Group Center X Cm"
+    },
+    "group_center_y_cm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Group Center Y Cm"
+    },
+    "group_radius_cm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Group Radius Cm"
+    },
+    "misses": {
+      "minimum": 0,
+      "title": "Misses",
+      "type": "integer"
+    },
+    "score_mean": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Score Mean"
+    },
+    "score_total": {
+      "minimum": 0,
+      "title": "Score Total",
+      "type": "integer"
+    },
+    "scored_arrows": {
+      "minimum": 0,
+      "title": "Scored Arrows",
+      "type": "integer"
+    },
+    "x_count": {
+      "minimum": 0,
+      "title": "X Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "end_id",
+    "arrows",
+    "scored_arrows",
+    "score_total",
+    "x_count",
+    "misses"
+  ],
+  "title": "EndStats",
+  "type": "object"
+}

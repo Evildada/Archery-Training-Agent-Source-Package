@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "keys": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Keys",
+      "type": "array"
+    },
+    "window_days": {
+      "default": 28,
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Window Days",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "archer_id",
+    "keys"
+  ],
+  "title": "LedgerSummaryInput",
+  "type": "object"
+}

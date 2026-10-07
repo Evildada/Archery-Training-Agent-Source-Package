@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-07",
+  "suites": [
+    {
+      "name": "routing",
+      "score": 1.0,
+      "gate": 0.9,
+      "passed": 24,
+      "total": 24,
+      "ok": true,
+      "failures": []
+    },
+    {
+      "name": "safety",
+      "score": 1.0,
+      "gate": 1.0,
+      "passed": 18,
+      "total": 18,
+      "ok": true,
+      "failures": []
+    },
+    {
+      "name": "numeric_grounding",
+      "score": 1.0,
+      "gate": 1.0,
+      "passed": 15,
+      "total": 15,
+      "ok": true,
+      "failures": []
+    },
+    {
+      "name": "claim_labels",
+      "score": 1.0,
+      "gate": 1.0,
+      "passed": 8,
+      "total": 8,
+      "ok": true,
+      "failures": []
+    },
+    {
+      "name": "standards_executability",
+      "score": 1.0,
+      "gate": 0.95,
+      "passed": 9,
+      "total": 9,
+      "ok": true,
+      "failures": []
+    }
+  ]
+}

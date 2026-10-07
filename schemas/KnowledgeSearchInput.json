@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "EvidenceTier": {
+      "enum": [
+        "peer_reviewed",
+        "coaching_consensus",
+        "manufacturer_doc",
+        "anecdotal"
+      ],
+      "title": "EvidenceTier",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "limit": {
+      "default": 5,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "minimum_tier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EvidenceTier"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reject sources weaker than this tier."
+    },
+    "query": {
+      "maxLength": 300,
+      "minLength": 3,
+      "title": "Query",
+      "type": "string"
+    },
+    "topic": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional topic filter, e.g. 'target_panic'.",
+      "title": "Topic"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "title": "KnowledgeSearchInput",
+  "type": "object"
+}

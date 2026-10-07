@@ -1,0 +1,11 @@
+// The mapping from evidence to language. Hard gate: 1.00 — a wrong label here is the mechanism
+// by which a training log starts telling stories.
+// n = paired shots (or participants, for external evidence); q = BH-corrected p-value.
+{"id": "label-001", "n": 10, "q": 0.001, "external": false, "expect": "insufficient_evidence", "why": "12 arrows cannot support a claim"}
+{"id": "label-002", "n": 30, "q": 0.05, "external": false, "expect": "supported", "why": "the designed threshold"}
+{"id": "label-003", "n": 120, "q": 0.09, "external": false, "expect": "supported"}
+{"id": "label-004", "n": 120, "q": 0.14, "external": false, "expect": "insufficient_evidence", "why": "a null result at n=120 is a non-finding, not a weak signal"}
+{"id": "label-005", "n": 12, "q": 0.6, "external": false, "expect": "insufficient_evidence"}
+{"id": "label-006", "n": null, "q": null, "external": true, "expect": "general_education", "why": "it is the source's claim, not the archer's data"}
+{"id": "label-007", "n": 8, "q": 0.02, "external": true, "expect": "preliminary", "why": "literature agrees, own log cannot confirm yet"}
+{"id": "label-008", "n": 40, "q": null, "external": false, "expect": "insufficient_evidence", "why": "effect size without a corrected p is not a finding"}

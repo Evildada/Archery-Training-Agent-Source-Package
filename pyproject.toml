@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "archery-agent"
+version = "0.0.1"
+description = "AI Archery Assistant — a harness-engineered training agent for compound archery"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+dependencies = [
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "import-linter>=2.0",
+]
+
+[project.scripts]
+archery-agent = "archery_agent.interfaces.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------------------------------------------------------------- lint (sensor)
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "PTH", "RUF", "T20", "ARG", "RET", "TRY"]
+ignore = ["TRY003", "TRY300"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ARG"]
+"scripts/*" = ["T20"]
+"src/archery_agent/interfaces/*" = ["T20"]
+
+# ---------------------------------------------------------------- types (sensor)
+
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+packages = ["archery_agent"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+strict_equality = true
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------- tests (sensor)
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["error"]

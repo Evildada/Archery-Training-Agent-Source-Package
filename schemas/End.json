@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A group of arrows shot as one unit. The natural scoring/analysis granularity.",
+  "properties": {
+    "arrows_planned": {
+      "default": 6,
+      "maximum": 12,
+      "minimum": 1,
+      "title": "Arrows Planned",
+      "type": "integer"
+    },
+    "distance_m": {
+      "exclusiveMinimum": 0.0,
+      "title": "Distance M",
+      "type": "number"
+    },
+    "end_id": {
+      "title": "End Id",
+      "type": "string"
+    },
+    "index": {
+      "maximum": 60,
+      "minimum": 1,
+      "title": "Index",
+      "type": "integer"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "session_id": {
+      "title": "Session Id",
+      "type": "string"
+    },
+    "target_face_id": {
+      "title": "Target Face Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "session_id",
+    "index",
+    "distance_m",
+    "target_face_id"
+  ],
+  "title": "End",
+  "type": "object"
+}

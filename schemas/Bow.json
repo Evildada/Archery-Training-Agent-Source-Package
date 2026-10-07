@@ -1,0 +1,133 @@
+{
+  "$defs": {
+    "BowType": {
+      "description": "v1 is compound-only by design decision (AGENTS.md rule 1).",
+      "enum": [
+        "compound"
+      ],
+      "title": "BowType",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "axle_to_axle_in": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Axle To Axle In"
+    },
+    "bow_id": {
+      "title": "Bow Id",
+      "type": "string"
+    },
+    "bow_mass_oz": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bow Mass Oz"
+    },
+    "bow_type": {
+      "$ref": "#/$defs/BowType",
+      "default": "compound"
+    },
+    "brace_height_in": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Brace Height In"
+    },
+    "brand": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Brand",
+      "type": "string"
+    },
+    "cam_system": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cam System"
+    },
+    "draw_length_in": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draw Length In"
+    },
+    "draw_weight_lb": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draw Weight Lb"
+    },
+    "let_off_pct": {
+      "anyOf": [
+        {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Let Off Pct"
+    },
+    "model": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    }
+  },
+  "required": [
+    "brand",
+    "model"
+  ],
+  "title": "Bow",
+  "type": "object"
+}
