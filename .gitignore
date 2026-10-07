@@ -26,10 +26,3 @@ dist/
 .DS_Store
 .idea/
 .vscode/
-
-# The Arena GitHub App (`arena-ai-coding-agent`) has contents:write but NOT `workflows`, so
-# GitHub refuses any push that creates or updates a file under .github/workflows/. The workflow
-# is deliberately kept on disk, untracked, and excluded here so it cannot be swept into a commit
-# by `git add -A`. When the app is granted the `workflows` permission:
-#   git add -f .github/workflows/ci.yml && git rm --cached -q ... (remove this rule) && commit
-.github/workflows/ci.yml
