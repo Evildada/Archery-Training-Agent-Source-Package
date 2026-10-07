@@ -1,8 +1,8 @@
 # 00 — Product Brief
 
 **Working name:** AI Archery Assistant (v1 — compound only)
-**Status:** draft v0.2 — six questions answered 2026-10-08 (Q1, Q2, Q3, Q5, Q6, Q11); the
-remaining eleven are tracked in `07-open-questions.md` with their defaults in force.
+**Status:** draft v0.2 — eleven questions answered 2026-10-08 (Q1-Q3, Q5-Q11); the remaining
+five (Q12-Q16) are tracked in `07-open-questions.md` with their defaults in force.
 
 **Decisions in force**
 | # | Decision | Consequence |
@@ -13,6 +13,11 @@ remaining eleven are tracked in `07-open-questions.md` with their defaults in fo
 | Q5 | The **recommended ten** parameters are mandatory; all 74 stay registered | `CORE_PARAMETERS` in `domain/parameters.py` |
 | Q6 | Timings are **self-estimated**, `reliability=low` | timing findings are provisional by construction |
 | Q11 | Load limits **warn, never block** | `sensors/load.py` behaviour is final for v1 |
+| Q4 | One model interface, **cloud default + local option** | `ProviderKind`/`settings_from_env`; local degrades conversation, never a guardrail |
+| Q7 | Store ring **and** offset; offsets asked for per mode | `OFFSETS_REQUIRED_MODES` + an `offsets_missing_for_mode` warning |
+| Q8 | **18 m 3-spot + 50 m 80 cm**, WA compound, blank bale anywhere | `V1_FACES` / `V1_FACE_AT_DISTANCE_M`; 122 cm and 40 cm 10-ring outside the v1 promise |
+| Q9 | **Neutral taxonomy**, the coach owns the method | `FaultKey` + `FAULTS_BY_PHASE`; templates map onto the shared vocabulary |
+| Q10 | Gym work = **accessory only**, no periodisation | a planner *contract* constraint merged into every brief, not a prompt line |
 
 ---
 

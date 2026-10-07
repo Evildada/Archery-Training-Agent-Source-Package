@@ -8,11 +8,15 @@ refuse to say more than that record supports.
 credentials.** The model goes in at M3 (`docs/06-roadmap.md`); everything below the model is
 already built, tested and enforced.
 
-**Decisions locked (2026-10-08, `docs/07-open-questions.md`):** the v1 user is the *pair* and a
-coach is usually also an archer (roles, not account types) · the day-one job is **"is my setup
-right"**, so M1 is capture + setup assessment · capture is per-end phone taps · the mandatory
-parameter set is the recommended ten, with all 74 kept in the registry · timings are
-self-estimated at `reliability=low` · load limits warn, never block.
+**Decisions locked (2026-10-08, `docs/07-open-questions.md` — eleven of sixteen answered):** the
+v1 user is the *pair* and a coach is usually also an archer (roles, not account types) · the
+day-one job is **"is my setup right"**, so M1 is capture + setup assessment · capture is per-end
+phone taps · the mandatory parameter set is the recommended ten, with all 74 kept in the registry
+· timings are self-estimated at `reliability=low` · load limits warn, never block · one model
+interface with cloud default and a real local option (M3) · ring **and** offset, offsets asked for
+per mode · v1 faces are 18 m 40 cm 3-spot and 50 m 80 cm under WA compound rules · a neutral fault
+taxonomy with the coach owning the template · gym work is accessory-only, no periodisation. The
+five remaining questions (Q12-Q16) are M4-M5 scope and keep their documented defaults.
 
 ```
 $ make setup && make check          # lint · types · architecture · schemas · tests · eval gates

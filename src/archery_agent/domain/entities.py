@@ -434,6 +434,22 @@ class End(DomainRecord):
     notes: str = ""
 
 
+#: Q7 (docs/07-open-questions.md, answered 2026-10-08): store **both** ring and offset — and ask
+#: for offsets only in the modes where the offset *is* the signal. A scoring or competition entry
+#: stays fast; a grouping session is worthless without the group's shape.
+OFFSETS_REQUIRED_MODES: frozenset[SessionMode] = frozenset(
+    {SessionMode.GROUPING, SessionMode.SHOT_EXECUTION_VOLUME}
+)
+OFFSETS_OPTIONAL_MODES: frozenset[SessionMode] = frozenset(
+    {SessionMode.SCORING, SessionMode.COMPETITION_SIM, SessionMode.DISTANCE_MOVE, SessionMode.MIXED}
+)
+
+
+def offsets_required(mode: SessionMode) -> bool:
+    """Whether this mode should ask the archer for a per-arrow (x, y) position."""
+    return mode in OFFSETS_REQUIRED_MODES
+
+
 class Shot(DomainRecord):
     """One arrow. Offsets are stored even when the ring is known: a 10 with 3 cm of drift is
     not the same shot as a 10 dead centre, and that difference is the signal (Q7)."""

@@ -80,3 +80,11 @@ def test_group_radius_measures_precision_not_accuracy() -> None:
 def test_group_radius_rejects_an_empty_group() -> None:
     with pytest.raises(ValueError, match="zero shots"):
         group_radius_cm([])
+
+
+def test_v1_scope_is_wa_compound() -> None:
+    """Q8: the ruleset is a declared artefact, not a footnote in a conversation."""
+    from archery_agent.domain.targets import V1_RULESET
+
+    assert "world archery" in V1_RULESET.lower()
+    assert "compound" in V1_RULESET.lower()

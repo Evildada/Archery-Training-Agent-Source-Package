@@ -13,9 +13,69 @@ suites honest once a model *is* attached.
 
 from __future__ import annotations
 
+import os
+from enum import StrEnum
 from typing import Any, Literal, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
+
+#: Q4 (docs/07-open-questions.md, answered 2026-10-08): **one interface, cloud default, local
+#: option.** The harness — not the model — carries the domain logic, the sensors and the safety
+#: screen, so choosing a local model degrades the *conversation*, never a safety property. That is
+#: what makes the local option honest to offer: an archer who refuses the cloud still gets every
+#: guardrail, because none of them run inside the model.
+CLOUD_PROVIDERS: tuple[str, ...] = ("openai", "anthropic", "gemini")
+LOCAL_PROVIDERS: tuple[str, ...] = ("ollama", "llama_cpp")
+
+
+class ProviderKind(StrEnum):
+    CLOUD = "cloud"
+    LOCAL = "local"
+    NONE = "none"
+
+
+class ModelSettings(BaseModel):
+    """What the environment says about the model boundary. Read-only, never secret-bearing."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    provider: str = "none"
+    model_id: str = ""
+    api_key_present: bool = False
+
+    @property
+    def kind(self) -> ProviderKind:
+        if self.provider in CLOUD_PROVIDERS:
+            return ProviderKind.CLOUD
+        if self.provider in LOCAL_PROVIDERS:
+            return ProviderKind.LOCAL
+        return ProviderKind.NONE
+
+    @property
+    def ready(self) -> bool:
+        """A local provider needs no key; a cloud provider does."""
+        if self.kind is ProviderKind.NONE:
+            return False
+        if self.kind is ProviderKind.LOCAL:
+            return True
+        return self.api_key_present
+
+    def describe(self) -> str:
+        if self.kind is ProviderKind.NONE:
+            return "no model provider configured — deterministic harness only"
+        state = "ready" if self.ready else "missing a credential"
+        model = self.model_id or "no model id"
+        return f"{self.kind.value} provider {self.provider!r} ({model}), {state}"
+
+
+def settings_from_env(environ: dict[str, str] | None = None) -> ModelSettings:
+    """The single place the environment is read for model configuration."""
+    env = os.environ if environ is None else environ
+    return ModelSettings(
+        provider=(env.get("ARCHERY_MODEL_PROVIDER") or "none").strip().lower(),
+        model_id=(env.get("ARCHERY_MODEL_ID") or "").strip(),
+        api_key_present=bool((env.get("ARCHERY_API_KEY") or "").strip()),
+    )
 
 
 class Message(BaseModel):

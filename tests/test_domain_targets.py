@@ -4,7 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from archery_agent.domain.targets import FACES, get_face, max_range_m, ring_for_offset
+from archery_agent.domain.targets import (
+    FACES,
+    V1_FACE_AT_DISTANCE_M,
+    V1_FACES,
+    get_face,
+    max_range_m,
+    ring_for_offset,
+)
 
 
 def test_ring_radii_match_published_geometry() -> None:
@@ -93,3 +100,20 @@ def test_unverified_face_is_flagged_as_such() -> None:
 
     assert get_face("WA_40CM_3SPOT_V").confidence is Confidence.UNVERIFIED
     assert get_face("WA_40CM_10RING").confidence is Confidence.MEASURED
+
+
+def test_v1_faces_cover_the_v1_distances() -> None:
+    """Q8: 18 m on the 40 cm 3-spot, 50 m on the 80 cm face.
+
+    The point of this test is the *interaction*: the face's own range limit must reach the
+    distance it is shot at in v1. A geometry table and a ruleset that disagree is exactly the
+    kind of quiet inconsistency that turns into wrong scores.
+    """
+    assert V1_FACE_AT_DISTANCE_M == {"WA_40CM_3SPOT_V": 18.0, "WA_80CM_10RING": 50.0}
+    for face_id, distance in V1_FACE_AT_DISTANCE_M.items():
+        assert face_id in V1_FACES
+        reach = max_range_m(face_id)
+        assert reach is not None, f"{face_id} has no rating but is shot at {distance} m in v1"
+        assert reach >= distance, (
+            f"{face_id} is rated to {reach} m but v1 shoots it at {distance} m"
+        )

@@ -220,3 +220,34 @@ def test_an_intent_free_message_asks_rather_than_guesses() -> None:
 def test_capture_route_requires_approval_before_writing() -> None:
     decision = route_message("I shot 3 ends of 6 today, all in the 9 and 10")
     assert decision.requires_approval, "writing to the ledger is never silent"
+
+
+# ------------------------------------- Q10: constraints travel with the contract, not the brief
+
+
+def test_contract_constraints_are_merged_into_every_brief() -> None:
+    captured: list[Brief] = []
+
+    class _Capture:
+        def run(self, spec: Any, brief: Brief, tools: Any, ctx: ToolContext) -> AgentResult:
+            captured.append(brief)
+            return AgentResult(status=AgentStatus.OK, summary="ok", structured={})
+
+    brief = Brief(
+        task="plan next week",
+        output_schema="TrainingPlanDraft",
+        constraints=("only Tuesday and Thursday",),
+    )
+    Dispatcher(_Capture()).dispatch("planner", brief, _ctx())
+
+    effective = captured[0].constraints
+    assert "only Tuesday and Thursday" in effective, "the caller's constraint survives"
+    assert any("accessory work only" in c for c in effective), "the contract's own rule survives"
+    assert any("never prescribe through pain" in c for c in effective)
+    assert brief.constraints == ("only Tuesday and Thursday",), "the caller's brief is unchanged"
+
+
+def test_every_specialist_carries_at_least_one_constraint() -> None:
+    """A subagent with no constraint is a specialist with no boundary."""
+    for name, spec in SPECS.items():
+        assert spec.constraints, f"{name} has no constraints attached to its contract"

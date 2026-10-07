@@ -61,8 +61,14 @@ class Dispatcher:
                 "not what the caller improvised"
             )
 
+        # Contract constraints are merged, never replaced: a caller may add restrictions, it
+        # cannot remove the ones the contract carries.
+        effective = brief.model_copy(
+            update={"constraints": (*brief.constraints, *spec.constraints)}
+        )
+
         tools = self.tools_for(name)
-        result = self._runner.run(spec, brief, tools, ctx)
+        result = self._runner.run(spec, effective, tools, ctx)
 
         if result.tool_calls > spec.tool_budget or result.tokens > spec.token_budget:
             raise BudgetExceededError(

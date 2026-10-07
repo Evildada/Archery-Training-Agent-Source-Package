@@ -13,6 +13,7 @@ here as types, not as a prompt instruction:
 from __future__ import annotations
 
 from datetime import datetime
+from enum import StrEnum
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -24,6 +25,62 @@ from archery_agent.domain.ids import new_id
 
 EvalWindow = Literal["shot", "end", "session", "rolling_3_ends", "rolling_7d", "rolling_30d"]
 Aggregation = Literal["mean", "median", "max", "min", "last", "sum", "count", "pct_pass"]
+
+
+class FaultKey(StrEnum):
+    """The **neutral** fault vocabulary (Q9, answered 2026-10-08).
+
+    The promise is "unify a coach's teaching method", so the method must stay the coach's. What
+    this product supplies instead is a shared vocabulary: each coach's template maps onto these
+    keys, the mapping is allowed to be lossy in one direction only, and the loss is recorded on
+    the template. Without a neutral vocabulary there is no cross-student analytics and no drift
+    detection; with a house *method* there is no reason for a coach to adopt it.
+    """
+
+    # routine / setup
+    NO_ROUTINE = "no_routine"
+    RUSHED_SETUP = "rushed_setup"
+    # draw
+    SNAPPED_DRAW = "snapped_draw"
+    ELBOW_HIGH_OR_LOW = "elbow_line"
+    GRIP_TENSION = "grip_tension"
+    # anchor / hold
+    PEEP_ALIGNMENT = "peep_alignment"
+    ANCHOR_DRIFT = "anchor_drift"
+    HOLD_OVERHOLD = "hold_overhold"
+    TARGET_PANIC = "target_panic"
+    # aim & expansion
+    AIM_FLOAT_LARGE = "aim_float_large"
+    FLINCH_OR_STOP_EXPANSION = "stopped_expansion"
+    PEEKING = "peeking"
+    # release
+    PUNCHED_TRIGGER = "punched_trigger"
+    GRIPPED_RELEASE = "gripped_release"
+    # follow-through
+    DROPPED_BOW_ARM = "dropped_bow_arm"
+    NO_FOLLOW_THROUGH = "no_follow_through"
+
+
+#: Which faults make sense on which phase of the cycle. A fault attached to the wrong phase is a
+#: coaching error, so the mapping is closed rather than free text.
+FAULTS_BY_PHASE: dict[str, tuple[FaultKey, ...]] = {
+    "routine": (FaultKey.NO_ROUTINE, FaultKey.RUSHED_SETUP),
+    "nock_raise": (FaultKey.RUSHED_SETUP,),
+    "draw": (FaultKey.SNAPPED_DRAW, FaultKey.ELBOW_HIGH_OR_LOW, FaultKey.GRIP_TENSION),
+    "hold_anchor": (
+        FaultKey.ANCHOR_DRIFT,
+        FaultKey.HOLD_OVERHOLD,
+        FaultKey.TARGET_PANIC,
+        FaultKey.PEEP_ALIGNMENT,
+    ),
+    "aim_expand": (
+        FaultKey.AIM_FLOAT_LARGE,
+        FaultKey.FLINCH_OR_STOP_EXPANSION,
+        FaultKey.PEEKING,
+    ),
+    "release": (FaultKey.PUNCHED_TRIGGER, FaultKey.GRIPPED_RELEASE),
+    "follow_through": (FaultKey.DROPPED_BOW_ARM, FaultKey.NO_FOLLOW_THROUGH),
+}
 
 
 class Standard(BaseModel):

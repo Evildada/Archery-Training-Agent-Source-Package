@@ -12,12 +12,14 @@ archer nothing and teaches the agent nothing either.
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict
 
 from archery_agent.domain import parameters as registry
-from archery_agent.domain.enums import ObservationSource, ParameterKind
+from archery_agent.domain.entities import offsets_required
+from archery_agent.domain.enums import ObservationSource, ParameterKind, SessionMode
 from archery_agent.domain.ledger import ParameterObservation
 
 #: Sample-size thresholds, referenced by the stats gates and by the docs (AGENTS.md rule 5).
@@ -275,6 +277,43 @@ def validate_record(
         )
 
     return ValidationResult(issues=tuple(issues))
+
+
+def validate_offsets_for_mode(
+    mode: SessionMode,
+    shots: Sequence[object],
+) -> ValidationResult:
+    """Q7: a mode that needs offsets, entered without any, is a warning — not a rejection.
+
+    Rejecting the data would punish the archer for a range-day compromise and lose the session;
+    the report simply cannot say anything about group shape, and it must say so out loud.
+    """
+    if not offsets_required(mode):
+        return ValidationResult()
+    offset_shots = [
+        shot
+        for shot in shots
+        if getattr(shot, "horizontal_offset_cm", None) is not None
+        and getattr(shot, "vertical_offset_cm", None) is not None
+    ]
+    if not shots or offset_shots:
+        return ValidationResult()
+    return ValidationResult(
+        issues=(
+            Issue(
+                code="offsets_missing_for_mode",
+                severity=Severity.WARNING,
+                message=(
+                    f"{mode.value}: {len(shots)} arrows recorded with scores but no (x, y) "
+                    "positions"
+                ),
+                suggestion=(
+                    "Group shape, centre drift and aim-float work are unavailable from this "
+                    "session; if you want group analysis next time, tap the arrow positions."
+                ),
+            ),
+        ),
+    )
 
 
 def validate_analysis_window(

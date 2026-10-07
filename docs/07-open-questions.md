@@ -5,8 +5,8 @@ a **recommended default** so work can continue, but the default is provisional u
 answer is written underneath it. Guessing silently is the most expensive failure mode here.
 
 Legend: 🔴 blocks M1 · 🟠 blocks M2–M3 · 🟢 blocks M4–M5
-Status: **six answered on 2026-10-08** (Q1, Q2, Q3, Q5, Q6, Q11). The rest stay open with
-their defaults in force; a default is not an answer and this file will keep saying so.
+Status: **eleven answered on 2026-10-08** (Q1-Q3, Q5-Q11). A default is never an answer: this
+file keeps the provisional ones visible until someone actually decides.
 
 ---
 
@@ -46,7 +46,12 @@ preference. The `capture` subagent stays at M3; the tap UI can be built before i
 Cloud API, local (Ollama/llama.cpp), or both behind one interface.
 **Default:** one interface, cloud default for quality, local for archers who refuse cloud
 (small models are acceptable because the *harness* carries the domain logic, not the model).
-**Answer:** _(open)_
+**Answer (2026-10-08): one interface, cloud default, local as a real option.** Implemented as
+`CLOUD_PROVIDERS` / `LOCAL_PROVIDERS`, `ProviderKind` and `settings_from_env` in
+`runtime/model_provider.py`: a cloud provider without a key reports `ready=False` and the doctor
+says so; a local provider needs no key. The structural point is that the sensors, the safety
+screen and the tool layer are identical either way — choosing local degrades the *conversation*
+and never a guardrail.
 
 ### 🟠 Q5 — Which parameters will the archer *actually* measure?
 Every parameter has a capture cost. Long lists fail. The registry has `capture_cost` precisely
@@ -75,27 +80,47 @@ values arrives explicitly marked as provisional and is never the sole basis for 
 A 10 with a 3 cm drift is not a 10 taken cleanly. Storing `(x, y)` offsets unlocks group
 analysis and aim-float work, but requires more entry effort (or an electronic target).
 **Default:** store both; offsets optional per mode (`grouping` asks for them, `scoring` does not).
-**Answer:** _(open)_
+**Answer (2026-10-08): both — offsets optional per mode.** `domain/entities.py` declares
+`OFFSETS_REQUIRED_MODES` (grouping, shot-execution volume) and `offsets_required(mode)`;
+`sensors/validators.py::validate_offsets_for_mode` emits an `offsets_missing_for_mode` **warning**
+when a mode that needs positions has none. A warning rather than an error: rejecting the session
+would punish a range-day compromise and lose the data — the report simply states that group shape
+is unavailable, and why.
 
 ### 🟠 Q8 — Target faces, distances, and ruleset in scope for v1?
 Indoor 18 m on the 40 cm 3-spot, 50 m on the 80 cm, or both? Which governing ruleset
 (WA indoor/outdoor compound)? This pins the geometry tables.
 **Default:** 18 m 3-spot + 50 m 80 cm, World Archery compound rules, plus blank bale.
-**Answer:** _(open)_
+**Answer (2026-10-08): 18 m on the 40 cm vertical 3-spot, 50 m on the 80 cm face, WA compound
+rules, blank bale at any distance.** Encoded as `V1_FACES`, `V1_RULESET` and
+`V1_FACE_AT_DISTANCE_M` in `domain/targets.py`, with a test asserting that each face's range
+rating actually reaches the distance v1 shoots it at — a geometry table and a ruleset that quietly
+disagree is how wrong scores happen. The 40 cm 10-ring and the 122 cm face stay implemented but
+outside the v1 promise: practice on them is reported as out-of-scope practice, not as a scored
+result.
 
 ### 🟠 Q9 — Coaching method ownership: one house method or many?
 If the product's promise is "unify a coach's teaching method", the template must be
 *the coach's*, not ours. But then which fault taxonomy does the app use internally?
 **Default:** our internal phase keys + fault taxonomy as the neutral vocabulary; each coach's
 template maps onto it (lossy in one direction only, and the loss is documented).
-**Answer:** _(open)_
+**Answer (2026-10-08): neutral taxonomy, the coach owns the template.** The seven phase keys
+already existed in the canonical cycle template; `domain/standards.py` now adds `FaultKey` (16
+neutral faults) and `FAULTS_BY_PHASE`, so a fault attached to the wrong phase is a closed-set
+error rather than free text. Nothing here teaches a house *method*: the coach's template is the
+method, and the taxonomy is what makes it measurable and comparable across students.
 
 ### 🟠 Q10 — Gym/support-work content: how far do we go?
 "Support practice planner" could mean anything between a checklist and a periodised strength
 program. Injury risk rises steeply with specificity.
 **Default:** accessory work only (rotator cuff, scapular control, core, grip/forearm), no
 periodisation, hard stop on any injury flag → referral.
-**Answer:** _(open)_
+**Answer (2026-10-08): accessory work only.** The ceiling is a constant in code, not a sentence in
+a prompt: `agents/specs.py::CONSTRAINTS["planner"]` carries "accessory work only - no periodised
+strength programme", "never prescribe through pain", the load guardrail, and the requirement that
+every block carries a scoreable standard. `AgentSpec.constraints` is merged into every brief by
+the dispatcher, so a caller can add restrictions but cannot remove these: the contract travels
+with the specialist instead of living in a prompt that can be rewritten.
 
 ### 🔴 Q11 — Load limits: is there a maximum safe arrow volume we should enforce?
 ACWR and +10 %/week are the defaults, but youth archers and high-volume compound training

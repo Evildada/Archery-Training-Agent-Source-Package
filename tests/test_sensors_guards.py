@@ -414,3 +414,25 @@ def test_sensitive_topics_require_peer_reviewed_sources() -> None:
 
     ok = validate_source_tier_for_topic(_ref(), topic="injury")
     assert ok.ok
+
+
+def test_offsets_are_requested_only_where_they_are_the_signal() -> None:
+    """Q7: a scoring entry stays fast; a grouping session without offsets is blind, and says so."""
+    from archery_agent.domain.enums import SessionMode
+    from archery_agent.sensors.validators import validate_offsets_for_mode
+
+    class _Shot:
+        horizontal_offset_cm = None
+        vertical_offset_cm = None
+
+    blind = [_Shot() for _ in range(6)]
+    grouping = validate_offsets_for_mode(SessionMode.GROUPING, blind)
+    assert grouping.ok, "a missing offset warns; it never rejects the archer's session"
+    assert any(issue.code == "offsets_missing_for_mode" for issue in grouping.warnings)
+    assert validate_offsets_for_mode(SessionMode.SCORING, blind).issues == ()
+
+    class _Located(_Shot):
+        horizontal_offset_cm = 1.0
+        vertical_offset_cm = -2.0
+
+    assert validate_offsets_for_mode(SessionMode.GROUPING, [_Located()] * 6).issues == ()

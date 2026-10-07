@@ -34,6 +34,23 @@ from archery_agent.domain.enums import Confidence
 RINGS_PER_FACE: int = 10
 
 
+#: Q8 (docs/07-open-questions.md, answered 2026-10-08): World Archery **compound** rules, indoor
+#: 18 m on the 40 cm vertical 3-spot, outdoor 50 m on the 80 cm face, plus blank bale at any
+#: distance. The 40 cm 10-ring and the 122 cm face stay implemented — they cost nothing and are
+#: used for practice scoring — but they are not part of the v1 promise, and a session on them is
+#: reported as out-of-scope practice rather than as a scored result.
+V1_FACES: tuple[str, ...] = ("WA_40CM_3SPOT_V", "WA_80CM_10RING", "BLANK_BALE")
+V1_RULESET: str = "World Archery — compound"
+#: Which v1 face is shot at which v1 distance. Kept as a pair rather than two lists, because
+#: "18 m on the 80 cm face" is a different session from "50 m on the 80 cm face" and the geometry
+#: only allows what it allows (asserted in tests/test_domain_targets.py).
+V1_FACE_AT_DISTANCE_M: dict[str, float] = {
+    "WA_40CM_3SPOT_V": 18.0,
+    "WA_80CM_10RING": 50.0,
+}
+V1_DISTANCES_M: tuple[float, ...] = tuple(V1_FACE_AT_DISTANCE_M.values())
+
+
 class TargetFaceSpec(BaseModel):
     """A target face: pure geometry plus its provenance."""
 

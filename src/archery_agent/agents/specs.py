@@ -39,6 +39,44 @@ OUTPUT_CONTRACTS: dict[str, str] = {
     "verifier": "Verdict",
 }
 
+#: Constraints attached to each contract (docs/07-open-questions.md, Q10 answered 2026-10-08:
+#: accessory work only — rotator cuff, scapular control, core, grip/forearm. No periodisation, and
+#: any injury signal stops the plan and refers out. Injury risk rises steeply with specificity, so
+#: the ceiling is a constant in code rather than a sentence in a prompt.
+CONSTRAINTS: dict[str, tuple[str, ...]] = {
+    "planner": (
+        "gym content: accessory work only (rotator cuff, scapular control, core, grip/forearm); "
+        "no periodised strength programme, no max-effort work",
+        "never prescribe through pain: any injury flag stops the plan and refers out",
+        "respect the load guardrail: ACWR 0.8-1.3, ramp <= 10 %/week, warn and explain rather "
+        "than silently complying",
+        "every block must carry a standard the archer can score at the end of the session",
+    ),
+    "cycle_analyst": (
+        "report the evidence label with every effect claim; n < 30 is not evidence",
+        "self-reported timings are reliability=low and cannot support a plan change on their own",
+    ),
+    "equip_tech": (
+        "an ESTIMATED value must name the one range test that would confirm or refute it",
+        "never recommend a change that cannot be tested at the next session",
+    ),
+    "librarian": (
+        "no claim without an EvidenceRef carrying a checkable locator",
+        "v1 is compound only: exclude recurve/barebow sources unless the transfer is explicit",
+    ),
+    "capture": (
+        "record what was said, not what it probably meant; unknown values stay empty",
+        "self-reported ordinals cannot claim high reliability",
+    ),
+    "verifier": (
+        "the verifier sees the candidate answer and its evidence refs, never the drafting notes",
+    ),
+    "orchestrator": (
+        "v1 is compound only; a recurve question is refused at the door, not answered carefully",
+    ),
+}
+
+
 #: Subagents that must never hold a tool that changes state or that spawns another agent.
 READ_ONLY_SUBAGENTS: frozenset[str] = frozenset({"cycle_analyst", "equip_tech", "librarian"})
 
@@ -54,6 +92,10 @@ class AgentSpec(BaseModel):
     allowed_tools: tuple[str, ...] = Field(min_length=1)
     token_budget: int = Field(gt=0)
     tool_budget: int = Field(gt=0)
+    #: Constraints that travel with the contract, not with the caller's brief. They are merged
+    #: into every brief the dispatcher sends, so a model cannot be handed a planner brief without
+    #: the load and scope rules attached.
+    constraints: tuple[str, ...] = ()
 
     def brief_line(self) -> str:
         """One line for the orchestrator's own context — the subagent's whole job description."""
@@ -80,6 +122,13 @@ def _build() -> dict[str, AgentSpec]:
             allowed_tools=allowed,
             token_budget=tokens,
             tool_budget=calls,
+            constraints=CONSTRAINTS.get(name, ()),
+        )
+    unknown = set(CONSTRAINTS) - set(specs)
+    if unknown:
+        raise KeyError(
+            f"constraints declared for unknown subagents: {sorted(unknown)} — a constraint that "
+            "belongs to nobody is a rule that is not being enforced."
         )
     missing = set(BUDGETS) - set(specs)
     if missing:

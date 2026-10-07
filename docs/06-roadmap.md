@@ -56,9 +56,11 @@ Two things, both mechanical:
 ## M2 — Coach & standards layer
 
 **Deliverables**
-- Versioned `CycleTemplate` authoring + `cycle.template_publish` with coach/student linking.
+- Versioned `CycleTemplate` authoring + `cycle.template_publish` with coach/student linking, and
+  the coach's own fault names mapped onto the neutral `FaultKey` vocabulary (Q9) with the loss
+  recorded on the template.
 - Standard authoring UI/CLI + `standards.suggest` from the archer's own distribution.
-- Drill catalog with at least 3 drills per phase fault and per standard.
+- Drill catalog with at least 3 drills per phase fault (Q9) and per standard.
 - `report.coach_card`.
 
 **Exit criterion**
@@ -71,6 +73,8 @@ instruction passes `validate_instruction` (metric + threshold + window).
 - `runtime/loop.py` with budgets, repairs, guards, event log.
 - Model provider interface + one concrete provider behind an env var.
 - Subagents: `capture`, `cycle_analyst`, `equip_tech` (librarian and planner at M4).
+- Model provider behind one interface (Q4): cloud default, local option, both selected by
+  environment only — no code path may depend on which one is configured.
 - Context assembly with deterministic ledger summary + artifact offload + compaction.
 - The `route`, `tool_args`, `numeric_grounding`, `consistency` eval suites.
 
@@ -79,6 +83,10 @@ instruction passes `validate_instruction` (metric + threshold + window).
 reproducible from the event log alone.
 
 ## M4 — Research librarian, planner, verifier
+
+The planner ships with the Q10 ceiling already in its contract constraint list: accessory work
+only (rotator cuff, scapular control, core, grip/forearm), no periodisation, and any injury flag
+stops the plan and refers out.
 
 **Deliverables**
 - Curated `knowledge/` corpus (≥ 40 cited sources: technique, equipment, sport psychology,

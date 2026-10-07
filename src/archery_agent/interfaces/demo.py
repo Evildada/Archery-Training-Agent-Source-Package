@@ -22,6 +22,7 @@ from archery_agent.domain.enums import Confidence, ObservationSource, Reliabilit
 from archery_agent.domain.ledger import ParameterObservation
 from archery_agent.runtime.context import AssembledContext
 from archery_agent.runtime.loop import PlannerDecision, ToolObservation
+from archery_agent.runtime.model_provider import ProviderKind, settings_from_env
 from archery_agent.store.memory import InMemoryLedger
 
 DEMO_ARCHER_ID = "arc_demo0001"
@@ -285,7 +286,13 @@ class DemoPlanner:
 
 def model_provider_status() -> tuple[Confidence, str]:
     """Report the model boundary honestly: the demo proves the harness runs without one."""
+    settings = settings_from_env()
+    if settings.kind is ProviderKind.NONE:
+        return (
+            Confidence.INSUFFICIENT_DATA,
+            "no model provider configured — deterministic harness only (see docs/06-roadmap.md M3)",
+        )
     return (
-        Confidence.INSUFFICIENT_DATA,
-        "no model provider configured — deterministic harness only (see docs/06-roadmap.md M3)",
+        Confidence.MEASURED if settings.ready else Confidence.INSUFFICIENT_DATA,
+        settings.describe(),
     )
