@@ -1,0 +1,421 @@
+{
+  "$defs": {
+    "ArrowSetup": {
+      "additionalProperties": false,
+      "properties": {
+        "arrow_id": {
+          "title": "Arrow Id",
+          "type": "string"
+        },
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "fletching_angle_deg": {
+          "anyOf": [
+            {
+              "maximum": 15.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Angle Deg"
+        },
+        "fletching_count": {
+          "anyOf": [
+            {
+              "maximum": 4,
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Count"
+        },
+        "fletching_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "vanes_2in",
+                "vanes_2_5in",
+                "vanes_3in",
+                "feathers",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fletching Type"
+        },
+        "insert_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Insert Mass Grains"
+        },
+        "measured_total_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Weigh a finished arrow. Catalog masses are optimistic; this is the value the simulator must prefer when both exist.",
+          "title": "Measured Total Mass Grains"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "nock_mass_grains": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Nock Mass Grains"
+        },
+        "point_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Point Mass Grains"
+        },
+        "shaft_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Length In"
+        },
+        "shaft_mass_grains": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shaft Mass Grains"
+        },
+        "shaft_spine_thou": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Static spine deflection in thousandths of an inch.",
+          "title": "Shaft Spine Thou"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "ArrowSetup",
+      "type": "object"
+    },
+    "Bow": {
+      "additionalProperties": false,
+      "properties": {
+        "axle_to_axle_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axle To Axle In"
+        },
+        "bow_id": {
+          "title": "Bow Id",
+          "type": "string"
+        },
+        "bow_mass_oz": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bow Mass Oz"
+        },
+        "bow_type": {
+          "$ref": "#/$defs/BowType",
+          "default": "compound"
+        },
+        "brace_height_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Brace Height In"
+        },
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "cam_system": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cam System"
+        },
+        "draw_length_in": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Length In"
+        },
+        "draw_weight_lb": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Draw Weight Lb"
+        },
+        "let_off_pct": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Let Off Pct"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "brand",
+        "model"
+      ],
+      "title": "Bow",
+      "type": "object"
+    },
+    "BowType": {
+      "description": "v1 is compound-only by design decision (AGENTS.md rule 1).",
+      "enum": [
+        "compound"
+      ],
+      "title": "BowType",
+      "type": "string"
+    },
+    "Release": {
+      "additionalProperties": false,
+      "properties": {
+        "brand": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Brand",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "release_id": {
+          "title": "Release Id",
+          "type": "string"
+        },
+        "release_type": {
+          "enum": [
+            "hinge",
+            "thumb_button",
+            "caliper",
+            "resistance"
+          ],
+          "title": "Release Type",
+          "type": "string"
+        },
+        "sear_travel_1_5": {
+          "anyOf": [
+            {
+              "maximum": 5.0,
+              "minimum": 1.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sear Travel 1 5"
+        }
+      },
+      "required": [
+        "release_type",
+        "brand",
+        "model"
+      ],
+      "title": "Release",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A versioned snapshot. Sessions point at a set, and sets are retired, never edited.",
+  "properties": {
+    "accessories": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "sight / scope / peep / rest / stabiliser \u2014 free-form brand+model notes.",
+      "title": "Accessories",
+      "type": "object"
+    },
+    "active_from": {
+      "format": "date-time",
+      "title": "Active From",
+      "type": "string"
+    },
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "arrow": {
+      "$ref": "#/$defs/ArrowSetup"
+    },
+    "bow": {
+      "$ref": "#/$defs/Bow"
+    },
+    "equipment_set_id": {
+      "title": "Equipment Set Id",
+      "type": "string"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "release": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Release"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "retired_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retired At"
+    }
+  },
+  "required": [
+    "archer_id",
+    "bow",
+    "arrow"
+  ],
+  "title": "EquipmentSet",
+  "type": "object"
+}

@@ -1,0 +1,309 @@
+{
+  "$defs": {
+    "Dose": {
+      "additionalProperties": false,
+      "description": "How much work. At least one dimension must be specified (checked by the instruction).",
+      "properties": {
+        "arrows": {
+          "anyOf": [
+            {
+              "maximum": 600,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arrows"
+        },
+        "duration_min": {
+          "anyOf": [
+            {
+              "maximum": 240,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Min"
+        },
+        "ends": {
+          "anyOf": [
+            {
+              "maximum": 60,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ends"
+        },
+        "reps": {
+          "anyOf": [
+            {
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reps"
+        },
+        "sets": {
+          "anyOf": [
+            {
+              "maximum": 30,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sets"
+        }
+      },
+      "title": "Dose",
+      "type": "object"
+    },
+    "SessionMode": {
+      "enum": [
+        "blank_bale",
+        "grouping",
+        "scoring",
+        "competition_sim",
+        "distance_move",
+        "shot_execution_volume",
+        "gym",
+        "mixed"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    },
+    "StandardOperator": {
+      "enum": [
+        "lte",
+        "gte",
+        "in_band",
+        "equals_band"
+      ],
+      "title": "StandardOperator",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "What the agent hands back when an archer asks 'what should I do?'\n\nConstructible only with a dose *and* a measurable criterion. This is the type-level\nenforcement of the brief's \"achievable / measurable standard to practice\".",
+  "properties": {
+    "aggregation": {
+      "default": "mean",
+      "enum": [
+        "mean",
+        "median",
+        "max",
+        "min",
+        "last",
+        "sum",
+        "count",
+        "pct_pass"
+      ],
+      "title": "Aggregation",
+      "type": "string"
+    },
+    "band_hi": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Hi"
+    },
+    "band_lo": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Lo"
+    },
+    "distance_m": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Distance M"
+    },
+    "dose": {
+      "$ref": "#/$defs/Dose"
+    },
+    "drill_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Drill Ref"
+    },
+    "execution_cue": {
+      "default": "",
+      "title": "Execution Cue",
+      "type": "string"
+    },
+    "focus_tag": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Focus Tag"
+    },
+    "instruction_id": {
+      "title": "Instruction Id",
+      "type": "string"
+    },
+    "metric_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Metric Key"
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SessionMode"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "n_min": {
+      "anyOf": [
+        {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "N Min"
+    },
+    "operator": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StandardOperator"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "standard_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Standard Id"
+    },
+    "stop_rule": {
+      "default": "",
+      "description": "When to stop early, e.g. 'stop if grip pressure reaches 4'.",
+      "title": "Stop Rule",
+      "type": "string"
+    },
+    "threshold": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold"
+    },
+    "title": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "window": {
+      "anyOf": [
+        {
+          "enum": [
+            "shot",
+            "end",
+            "session",
+            "rolling_3_ends",
+            "rolling_7d",
+            "rolling_30d"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Window"
+    }
+  },
+  "required": [
+    "title",
+    "dose"
+  ],
+  "title": "PracticeInstruction",
+  "type": "object"
+}

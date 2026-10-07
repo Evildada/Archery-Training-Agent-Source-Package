@@ -1,0 +1,51 @@
+name: harness
+
+# Every job here is a sensor (docs/05-sensors-and-evals.md). Nothing in this file needs a model,
+# a credential or the network: that is what lets the deterministic spine be trusted before any
+# model is attached.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint (style sensor)
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Types (type sensor)
+        run: mypy
+
+      - name: Architecture (layering sensor)
+        run: lint-imports --config .importlinter
+
+      - name: Schema drift (contract sensor)
+        run: python scripts/export_schemas.py --check
+
+      - name: Tests (domain + sensor suites)
+        run: python -m pytest
+
+      - name: Eval gates (deterministic)
+        run: python scripts/run_evals.py --no-write
+
+      - name: Harness self-check
+        run: python -m archery_agent.interfaces.cli doctor
+
+      - name: Deterministic end-to-end turn
+        run: python -m archery_agent.interfaces.cli demo --sessions 12

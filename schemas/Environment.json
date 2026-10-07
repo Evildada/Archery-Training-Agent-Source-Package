@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "humidity_pct": {
+      "anyOf": [
+        {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Humidity Pct"
+    },
+    "indoor_outdoor": {
+      "default": "indoor",
+      "enum": [
+        "indoor",
+        "outdoor"
+      ],
+      "title": "Indoor Outdoor",
+      "type": "string"
+    },
+    "temperature_c": {
+      "anyOf": [
+        {
+          "maximum": 50.0,
+          "minimum": -20.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Temperature C"
+    },
+    "wind_direction_deg": {
+      "anyOf": [
+        {
+          "maximum": 360.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wind Direction Deg"
+    },
+    "wind_speed_mps": {
+      "anyOf": [
+        {
+          "maximum": 30.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wind Speed Mps"
+    }
+  },
+  "title": "Environment",
+  "type": "object"
+}

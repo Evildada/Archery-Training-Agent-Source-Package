@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "EventType": {
+      "enum": [
+        "turn_start",
+        "guard_block",
+        "context_assembled",
+        "plan",
+        "tool_call",
+        "sensor_block",
+        "repair",
+        "budget_hit",
+        "answer_gate",
+        "insight_persisted",
+        "turn_end"
+      ],
+      "title": "EventType",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+    },
+    "event": {
+      "$ref": "#/$defs/EventType"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "step": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Step"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "event"
+  ],
+  "title": "Event",
+  "type": "object"
+}

@@ -1,0 +1,28 @@
+# runtime data — archer records never belong in git
+data/*.db
+data/*.sqlite*
+data/raw/
+data/artifacts/
+data/exports/
+data/runs/
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# os / editors
+.DS_Store
+.idea/
+.vscode/

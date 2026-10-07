@@ -1,0 +1,11 @@
+// Executability of standards: metric + operator + threshold + window + n_min, all in range.
+// Gate: >= 0.95. The negative cases are the shapes coaching advice actually arrives in.
+{"id": "std-001", "standard": {"name": "Group radius at 18 m", "metric_key": "outcome.group_radius_cm", "operator": "lte", "threshold": 6.0, "window": "session", "n_min": 6}, "expect": "executable", "why": "the canonical grouping standard"}
+{"id": "std-002", "standard": {"name": "Hold band", "metric_key": "cycle.hold_time_s", "operator": "in_band", "band_lo": 2.0, "band_hi": 4.0, "window": "end", "n_min": 6}, "expect": "executable"}
+{"id": "std-003", "standard": {"name": "Routine adherence", "metric_key": "mental.routine_adherence_pct", "operator": "gte", "threshold": 80.0, "window": "session", "n_min": 6}, "expect": "executable"}
+{"id": "std-004", "standard": {"name": "Work on your release", "metric_key": "outcome.group_radius_cm", "operator": "lte", "window": "session", "n_min": 6}, "expect": "rejected", "why": "'work on your release' must not be storable as a standard"}
+{"id": "std-005", "standard": {"name": "Improve", "metric_key": "outcome.score_mean", "operator": "gte", "threshold": 9.5, "window": "session", "n_min": 6}, "expect": "executable", "why": "9.5 is inside the plausible range for a mean arrow score, so it is storable — but it must raise the missing-rationale warning, because a number with no provenance is a wish"}
+{"id": "std-006", "standard": {"name": "Group radius", "metric_key": "outcome.group_radius_cm", "operator": "lte", "threshold": 500.0, "window": "session", "n_min": 6}, "expect": "rejected", "why": "implausible threshold"}
+{"id": "std-007", "standard": {"name": "Blank bale score", "metric_key": "outcome.score_mean", "operator": "gte", "threshold": 8.0, "window": "session", "n_min": 6, "mode": "blank_bale"}, "expect": "rejected", "why": "nothing is scored on a blank bale"}
+{"id": "std-008", "standard": {"name": "Unknown parameter", "metric_key": "cycle.hold_time", "operator": "lte", "threshold": 4.0, "window": "session", "n_min": 6}, "expect": "rejected", "why": "unregistered metric"}
+{"id": "std-009", "standard": {"name": "Band upside down", "metric_key": "cycle.hold_time_s", "operator": "in_band", "band_lo": 5.0, "band_hi": 2.0, "window": "end", "n_min": 6}, "expect": "rejected", "why": "band_lo must be below band_hi"}

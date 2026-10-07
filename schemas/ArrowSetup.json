@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arrow_id": {
+      "title": "Arrow Id",
+      "type": "string"
+    },
+    "brand": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Brand",
+      "type": "string"
+    },
+    "fletching_angle_deg": {
+      "anyOf": [
+        {
+          "maximum": 15.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fletching Angle Deg"
+    },
+    "fletching_count": {
+      "anyOf": [
+        {
+          "maximum": 4,
+          "minimum": 2,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fletching Count"
+    },
+    "fletching_type": {
+      "anyOf": [
+        {
+          "enum": [
+            "vanes_2in",
+            "vanes_2_5in",
+            "vanes_3in",
+            "feathers",
+            "other"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fletching Type"
+    },
+    "insert_mass_grains": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Insert Mass Grains"
+    },
+    "measured_total_mass_grains": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Weigh a finished arrow. Catalog masses are optimistic; this is the value the simulator must prefer when both exist.",
+      "title": "Measured Total Mass Grains"
+    },
+    "model": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "nock_mass_grains": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Nock Mass Grains"
+    },
+    "point_mass_grains": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Point Mass Grains"
+    },
+    "shaft_length_in": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shaft Length In"
+    },
+    "shaft_mass_grains": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shaft Mass Grains"
+    },
+    "shaft_spine_thou": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Static spine deflection in thousandths of an inch.",
+      "title": "Shaft Spine Thou"
+    }
+  },
+  "required": [
+    "brand",
+    "model"
+  ],
+  "title": "ArrowSetup",
+  "type": "object"
+}

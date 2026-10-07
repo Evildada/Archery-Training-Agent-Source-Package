@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "brand": {
+      "default": "",
+      "title": "Brand",
+      "type": "string"
+    },
+    "draw_length_in": {
+      "description": "Archer's draw length.",
+      "exclusiveMinimum": 0,
+      "maximum": 35,
+      "title": "Draw Length In",
+      "type": "number"
+    },
+    "draw_weight_lb": {
+      "description": "Peak draw weight of the bow.",
+      "exclusiveMinimum": 0,
+      "maximum": 100,
+      "title": "Draw Weight Lb",
+      "type": "number"
+    },
+    "ibo_fps": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "maximum": 400,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Bow's IBO rating.",
+      "title": "Ibo Fps"
+    },
+    "insert_mass_grains": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Insert Mass Grains",
+      "type": "number"
+    },
+    "measured_speed_fps": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "maximum": 400,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Chronograph reading for this exact setup.",
+      "title": "Measured Speed Fps"
+    },
+    "measured_total_mass_grains": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Weighed finished arrow \u2014 always preferred when present.",
+      "title": "Measured Total Mass Grains"
+    },
+    "model": {
+      "default": "",
+      "title": "Model",
+      "type": "string"
+    },
+    "nock_mass_grains": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Nock Mass Grains",
+      "type": "number"
+    },
+    "point_mass_grains": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Point Mass Grains",
+      "type": "number"
+    },
+    "run_spine_check": {
+      "default": true,
+      "title": "Run Spine Check",
+      "type": "boolean"
+    },
+    "shaft_length_in": {
+      "description": "Cut shaft length, inches.",
+      "exclusiveMinimum": 0,
+      "maximum": 34,
+      "title": "Shaft Length In",
+      "type": "number"
+    },
+    "shaft_mass_grains": {
+      "description": "Bare shaft mass in grains.",
+      "exclusiveMinimum": 0,
+      "title": "Shaft Mass Grains",
+      "type": "number"
+    },
+    "static_spine_thou": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Static Spine Thou"
+    },
+    "vane_mass_grains": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Vane Mass Grains",
+      "type": "number"
+    }
+  },
+  "required": [
+    "shaft_length_in",
+    "shaft_mass_grains",
+    "draw_weight_lb",
+    "draw_length_in"
+  ],
+  "title": "ArrowSetupInput",
+  "type": "object"
+}

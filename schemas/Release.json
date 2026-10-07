@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "brand": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Brand",
+      "type": "string"
+    },
+    "model": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "release_id": {
+      "title": "Release Id",
+      "type": "string"
+    },
+    "release_type": {
+      "enum": [
+        "hinge",
+        "thumb_button",
+        "caliper",
+        "resistance"
+      ],
+      "title": "Release Type",
+      "type": "string"
+    },
+    "sear_travel_1_5": {
+      "anyOf": [
+        {
+          "maximum": 5.0,
+          "minimum": 1.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sear Travel 1 5"
+    }
+  },
+  "required": [
+    "release_type",
+    "brand",
+    "model"
+  ],
+  "title": "Release",
+  "type": "object"
+}

@@ -1,0 +1,313 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "description": "One assertable statement inside an insight.",
+      "properties": {
+        "caveats": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Caveats",
+          "type": "array"
+        },
+        "ci_high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ci High"
+        },
+        "ci_low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ci Low"
+        },
+        "effect_size": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pearson r for associations; signed slope for trends.",
+          "title": "Effect Size"
+        },
+        "evidence_label": {
+          "$ref": "#/$defs/EvidenceLabel",
+          "default": "insufficient_evidence"
+        },
+        "evidence_refs": {
+          "default": [],
+          "description": "source_id values of the EvidenceRef entries relied on.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "n": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N"
+        },
+        "parameter_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameter Key"
+        },
+        "q_value": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Q Value"
+        },
+        "statement": {
+          "maxLength": 1000,
+          "minLength": 8,
+          "title": "Statement",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "EvidenceLabel": {
+      "description": "How strongly the archer's *own data* supports a claim.",
+      "enum": [
+        "supported",
+        "preliminary",
+        "insufficient_evidence",
+        "general_education"
+      ],
+      "title": "EvidenceLabel",
+      "type": "string"
+    },
+    "EvidenceRef": {
+      "additionalProperties": false,
+      "description": "A citation. Incomplete citations are rejected at construction time.",
+      "properties": {
+        "author": {
+          "default": "",
+          "title": "Author",
+          "type": "string"
+        },
+        "doi": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Doi"
+        },
+        "locator": {
+          "default": "",
+          "description": "Page / section / table, for print sources.",
+          "title": "Locator",
+          "type": "string"
+        },
+        "quote": {
+          "default": "",
+          "description": "The specific passage relied on. Required for anything quoted; strongly encouraged otherwise so a human can check the claim without fetching the source.",
+          "maxLength": 2000,
+          "title": "Quote",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 80,
+          "minLength": 3,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "tier": {
+          "$ref": "#/$defs/EvidenceTier"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "venue": {
+          "default": "",
+          "description": "Journal, book, or publisher.",
+          "title": "Venue",
+          "type": "string"
+        },
+        "year": {
+          "maximum": 2100,
+          "minimum": 1900,
+          "title": "Year",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "year",
+        "tier"
+      ],
+      "title": "EvidenceRef",
+      "type": "object"
+    },
+    "EvidenceTier": {
+      "enum": [
+        "peer_reviewed",
+        "coaching_consensus",
+        "manufacturer_doc",
+        "anecdotal"
+      ],
+      "title": "EvidenceTier",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One step of a plan. A tool call, a final answer, or an honest refusal to answer.",
+  "properties": {
+    "answer_text": {
+      "default": "",
+      "title": "Answer Text",
+      "type": "string"
+    },
+    "arguments": {
+      "additionalProperties": true,
+      "title": "Arguments",
+      "type": "object"
+    },
+    "claims": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/EvidenceRef"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "kind": {
+      "enum": [
+        "tool_call",
+        "answer",
+        "insufficient"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+    },
+    "tool_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Name"
+    }
+  },
+  "required": [
+    "kind"
+  ],
+  "title": "PlannerDecision",
+  "type": "object"
+}

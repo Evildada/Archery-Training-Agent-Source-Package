@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actual_spine_thou": {
+      "exclusiveMinimum": 0,
+      "title": "Actual Spine Thou",
+      "type": "number"
+    },
+    "arrow_length_in": {
+      "exclusiveMinimum": 0,
+      "maximum": 34,
+      "title": "Arrow Length In",
+      "type": "number"
+    },
+    "draw_weight_lb": {
+      "exclusiveMinimum": 0,
+      "maximum": 100,
+      "title": "Draw Weight Lb",
+      "type": "number"
+    },
+    "point_mass_grains": {
+      "default": 100.0,
+      "exclusiveMinimum": 0,
+      "title": "Point Mass Grains",
+      "type": "number"
+    }
+  },
+  "required": [
+    "draw_weight_lb",
+    "arrow_length_in",
+    "actual_spine_thou"
+  ],
+  "title": "SpineCheckInput",
+  "type": "object"
+}

@@ -1,0 +1,249 @@
+{
+  "$defs": {
+    "Environment": {
+      "additionalProperties": false,
+      "properties": {
+        "humidity_pct": {
+          "anyOf": [
+            {
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Humidity Pct"
+        },
+        "indoor_outdoor": {
+          "default": "indoor",
+          "enum": [
+            "indoor",
+            "outdoor"
+          ],
+          "title": "Indoor Outdoor",
+          "type": "string"
+        },
+        "temperature_c": {
+          "anyOf": [
+            {
+              "maximum": 50.0,
+              "minimum": -20.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature C"
+        },
+        "wind_direction_deg": {
+          "anyOf": [
+            {
+              "maximum": 360.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wind Direction Deg"
+        },
+        "wind_speed_mps": {
+          "anyOf": [
+            {
+              "maximum": 30.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wind Speed Mps"
+        }
+      },
+      "title": "Environment",
+      "type": "object"
+    },
+    "SessionMode": {
+      "enum": [
+        "blank_bale",
+        "grouping",
+        "scoring",
+        "competition_sim",
+        "distance_move",
+        "shot_execution_volume",
+        "gym",
+        "mixed"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "archer_note": {
+      "default": "",
+      "title": "Archer Note",
+      "type": "string"
+    },
+    "arrow_count": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Arrow Count",
+      "type": "integer"
+    },
+    "coach_note": {
+      "default": "",
+      "title": "Coach Note",
+      "type": "string"
+    },
+    "cycle_template_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cycle Template Id"
+    },
+    "distance_m": {
+      "exclusiveMinimum": 0.0,
+      "title": "Distance M",
+      "type": "number"
+    },
+    "duration_min": {
+      "anyOf": [
+        {
+          "maximum": 600.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration Min"
+    },
+    "environment": {
+      "$ref": "#/$defs/Environment"
+    },
+    "equipment_set_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Equipment Set Id"
+    },
+    "focus_tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Focus Tags",
+      "type": "array"
+    },
+    "mode": {
+      "$ref": "#/$defs/SessionMode"
+    },
+    "planned_arrow_count": {
+      "anyOf": [
+        {
+          "maximum": 1000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Planned Arrow Count"
+    },
+    "readiness_1_10": {
+      "anyOf": [
+        {
+          "maximum": 10.0,
+          "minimum": 1.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Readiness 1 10"
+    },
+    "rpe_1_10": {
+      "anyOf": [
+        {
+          "maximum": 10.0,
+          "minimum": 1.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rpe 1 10"
+    },
+    "session_id": {
+      "title": "Session Id",
+      "type": "string"
+    },
+    "sleep_hours": {
+      "anyOf": [
+        {
+          "maximum": 16.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sleep Hours"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "target_face_id": {
+      "title": "Target Face Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "archer_id",
+    "mode",
+    "distance_m",
+    "target_face_id"
+  ],
+  "title": "Session",
+  "type": "object"
+}

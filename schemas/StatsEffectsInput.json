@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "candidate_keys": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 20,
+      "minItems": 1,
+      "title": "Candidate Keys",
+      "type": "array"
+    },
+    "outcome_key": {
+      "description": "The dependent variable, e.g. 'outcome.score_mean'.",
+      "title": "Outcome Key",
+      "type": "string"
+    },
+    "unit": {
+      "default": "auto",
+      "description": "Analysis unit. 'shot' gives many more paired observations and a stronger claim; 'session' is a coarser fallback when shot ids are missing.",
+      "enum": [
+        "auto",
+        "shot",
+        "session"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "window_days": {
+      "default": 90,
+      "maximum": 730,
+      "minimum": 7,
+      "title": "Window Days",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "archer_id",
+    "outcome_key",
+    "candidate_keys"
+  ],
+  "title": "StatsEffectsInput",
+  "type": "object"
+}

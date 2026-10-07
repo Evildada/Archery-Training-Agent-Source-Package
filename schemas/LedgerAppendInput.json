@@ -1,0 +1,168 @@
+{
+  "$defs": {
+    "ObservationInput": {
+      "additionalProperties": false,
+      "description": "One row to append. Deliberately mirrors ParameterObservation minus ids/timestamps.",
+      "properties": {
+        "distance_m": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 100,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distance M"
+        },
+        "end_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Id"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "reliability": {
+          "$ref": "#/$defs/Reliability",
+          "default": "medium"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Id"
+        },
+        "shot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shot Id"
+        },
+        "source": {
+          "$ref": "#/$defs/ObservationSource",
+          "default": "self_reported"
+        },
+        "target_face_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Face Id"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ],
+      "title": "ObservationInput",
+      "type": "object"
+    },
+    "ObservationSource": {
+      "enum": [
+        "self_reported",
+        "coach_rated",
+        "sensor",
+        "derived",
+        "imported"
+      ],
+      "title": "ObservationSource",
+      "type": "string"
+    },
+    "Reliability": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "Reliability",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "observations": {
+      "items": {
+        "$ref": "#/$defs/ObservationInput"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Observations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archer_id",
+    "observations"
+  ],
+  "title": "LedgerAppendInput",
+  "type": "object"
+}

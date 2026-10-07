@@ -1,0 +1,164 @@
+{
+  "$defs": {
+    "CyclePhase": {
+      "additionalProperties": false,
+      "description": "One phase of the shooting cycle. The shared vocabulary between coaches and students.",
+      "properties": {
+        "common_faults": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Common Faults",
+          "type": "array"
+        },
+        "cue": {
+          "default": "",
+          "description": "Short in-shot cue, one or two words.",
+          "title": "Cue",
+          "type": "string"
+        },
+        "definition": {
+          "description": "What the archer should be doing.",
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "observe_params": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Observe Params",
+          "type": "array"
+        },
+        "order": {
+          "maximum": 12,
+          "minimum": 1,
+          "title": "Order",
+          "type": "integer"
+        },
+        "phase_key": {
+          "enum": [
+            "routine",
+            "nock_raise",
+            "draw",
+            "hold_anchor",
+            "aim_expand",
+            "release",
+            "follow_through"
+          ],
+          "title": "Phase Key",
+          "type": "string"
+        },
+        "target_window": {
+          "default": "",
+          "description": "Human-readable intent, e.g. 'hold 2-4 s'. Numeric standards live in Standard records so they can be evaluated, not just read.",
+          "title": "Target Window",
+          "type": "string"
+        }
+      },
+      "required": [
+        "phase_key",
+        "order",
+        "name",
+        "definition"
+      ],
+      "title": "CyclePhase",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable once published. A coach's method, expressed so it can be taught and checked.",
+  "properties": {
+    "author": {
+      "default": "archer",
+      "enum": [
+        "archer",
+        "coach",
+        "system",
+        "imported"
+      ],
+      "title": "Author",
+      "type": "string"
+    },
+    "author_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Author Id"
+    },
+    "name": {
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "phases": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CyclePhase"
+      },
+      "title": "Phases",
+      "type": "array"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published At"
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes"
+    },
+    "template_id": {
+      "title": "Template Id",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "CycleTemplate",
+  "type": "object"
+}

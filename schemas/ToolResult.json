@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "Confidence": {
+      "description": "How a *number* was obtained. Required on every tool result (docs/04 \u00a710).",
+      "enum": [
+        "measured",
+        "derived",
+        "estimated",
+        "interpolated",
+        "unverified",
+        "insufficient_data"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "data_snapshot_hash": {
+          "default": "",
+          "title": "Data Snapshot Hash",
+          "type": "string"
+        },
+        "harness_version": {
+          "default": "0.0.1",
+          "title": "Harness Version",
+          "type": "string"
+        },
+        "tool_version": {
+          "default": "0.0.1",
+          "title": "Tool Version",
+          "type": "string"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The uniform result envelope \u2014 see docs/04 \u00a710.",
+  "properties": {
+    "artifact_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifact Ref"
+    },
+    "assumptions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "confidence": {
+      "$ref": "#/$defs/Confidence",
+      "default": "insufficient_data"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Data"
+    },
+    "error": {
+      "default": "",
+      "title": "Error",
+      "type": "string"
+    },
+    "n": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "N"
+    },
+    "ok": {
+      "default": true,
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "units": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Units",
+      "type": "object"
+    },
+    "warnings": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "title": "ToolResult",
+  "type": "object"
+}

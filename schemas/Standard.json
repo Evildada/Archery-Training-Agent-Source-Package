@@ -1,0 +1,236 @@
+{
+  "$defs": {
+    "SessionMode": {
+      "enum": [
+        "blank_bale",
+        "grouping",
+        "scoring",
+        "competition_sim",
+        "distance_move",
+        "shot_execution_volume",
+        "gym",
+        "mixed"
+      ],
+      "title": "SessionMode",
+      "type": "string"
+    },
+    "StandardOperator": {
+      "enum": [
+        "lte",
+        "gte",
+        "in_band",
+        "equals_band"
+      ],
+      "title": "StandardOperator",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An executable definition of 'done well' for one metric, window and difficulty.",
+  "properties": {
+    "active": {
+      "default": true,
+      "title": "Active",
+      "type": "boolean"
+    },
+    "aggregation": {
+      "default": "mean",
+      "enum": [
+        "mean",
+        "median",
+        "max",
+        "min",
+        "last",
+        "sum",
+        "count",
+        "pct_pass"
+      ],
+      "title": "Aggregation",
+      "type": "string"
+    },
+    "band_hi": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Hi"
+    },
+    "band_lo": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Band Lo"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "difficulty": {
+      "default": "development",
+      "enum": [
+        "foundation",
+        "development",
+        "competitive"
+      ],
+      "title": "Difficulty",
+      "type": "string"
+    },
+    "distance_m": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Distance M"
+    },
+    "drill_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Drill Ref"
+    },
+    "focus_tag": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Focus Tag"
+    },
+    "metric_key": {
+      "title": "Metric Key",
+      "type": "string"
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SessionMode"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "n_min": {
+      "default": 6,
+      "maximum": 200,
+      "minimum": 1,
+      "title": "N Min",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "operator": {
+      "$ref": "#/$defs/StandardOperator"
+    },
+    "owner": {
+      "default": "system",
+      "enum": [
+        "archer",
+        "coach",
+        "system"
+      ],
+      "title": "Owner",
+      "type": "string"
+    },
+    "owner_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Owner Id"
+    },
+    "rationale": {
+      "default": "",
+      "description": "Where the number came from (archer's own distribution, coach's method, competition requirement).",
+      "title": "Rationale",
+      "type": "string"
+    },
+    "standard_id": {
+      "title": "Standard Id",
+      "type": "string"
+    },
+    "target_face_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Target Face Id"
+    },
+    "threshold": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Threshold"
+    },
+    "window": {
+      "default": "session",
+      "enum": [
+        "shot",
+        "end",
+        "session",
+        "rolling_3_ends",
+        "rolling_7d",
+        "rolling_30d"
+      ],
+      "title": "Window",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "metric_key",
+    "operator"
+  ],
+  "title": "Standard",
+  "type": "object"
+}

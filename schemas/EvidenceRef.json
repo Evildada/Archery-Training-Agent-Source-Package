@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "EvidenceTier": {
+      "enum": [
+        "peer_reviewed",
+        "coaching_consensus",
+        "manufacturer_doc",
+        "anecdotal"
+      ],
+      "title": "EvidenceTier",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A citation. Incomplete citations are rejected at construction time.",
+  "properties": {
+    "author": {
+      "default": "",
+      "title": "Author",
+      "type": "string"
+    },
+    "doi": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Doi"
+    },
+    "locator": {
+      "default": "",
+      "description": "Page / section / table, for print sources.",
+      "title": "Locator",
+      "type": "string"
+    },
+    "quote": {
+      "default": "",
+      "description": "The specific passage relied on. Required for anything quoted; strongly encouraged otherwise so a human can check the claim without fetching the source.",
+      "maxLength": 2000,
+      "title": "Quote",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "format": "date-time",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 80,
+      "minLength": 3,
+      "title": "Source Id",
+      "type": "string"
+    },
+    "tier": {
+      "$ref": "#/$defs/EvidenceTier"
+    },
+    "title": {
+      "maxLength": 300,
+      "minLength": 3,
+      "title": "Title",
+      "type": "string"
+    },
+    "url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Url"
+    },
+    "venue": {
+      "default": "",
+      "description": "Journal, book, or publisher.",
+      "title": "Venue",
+      "type": "string"
+    },
+    "year": {
+      "maximum": 2100,
+      "minimum": 1900,
+      "title": "Year",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "source_id",
+    "title",
+    "year",
+    "tier"
+  ],
+  "title": "EvidenceRef",
+  "type": "object"
+}

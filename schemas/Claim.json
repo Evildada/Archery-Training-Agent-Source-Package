@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "EvidenceLabel": {
+      "description": "How strongly the archer's *own data* supports a claim.",
+      "enum": [
+        "supported",
+        "preliminary",
+        "insufficient_evidence",
+        "general_education"
+      ],
+      "title": "EvidenceLabel",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One assertable statement inside an insight.",
+  "properties": {
+    "caveats": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "ci_high": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ci High"
+    },
+    "ci_low": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ci Low"
+    },
+    "effect_size": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Pearson r for associations; signed slope for trends.",
+      "title": "Effect Size"
+    },
+    "evidence_label": {
+      "$ref": "#/$defs/EvidenceLabel",
+      "default": "insufficient_evidence"
+    },
+    "evidence_refs": {
+      "default": [],
+      "description": "source_id values of the EvidenceRef entries relied on.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "n": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "N"
+    },
+    "parameter_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parameter Key"
+    },
+    "q_value": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Q Value"
+    },
+    "statement": {
+      "maxLength": 1000,
+      "minLength": 8,
+      "title": "Statement",
+      "type": "string"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Value"
+    }
+  },
+  "required": [
+    "statement"
+  ],
+  "title": "Claim",
+  "type": "object"
+}

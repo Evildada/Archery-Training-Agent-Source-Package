@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One arrow. Offsets are stored even when the ring is known: a 10 with 3 cm of drift is\nnot the same shot as a 10 dead centre, and that difference is the signal (Q7).",
+  "properties": {
+    "end_id": {
+      "title": "End Id",
+      "type": "string"
+    },
+    "horizontal_offset_cm": {
+      "anyOf": [
+        {
+          "maximum": 200.0,
+          "minimum": -200.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Horizontal Offset Cm"
+    },
+    "index": {
+      "maximum": 12,
+      "minimum": 1,
+      "title": "Index",
+      "type": "integer"
+    },
+    "is_miss": {
+      "default": false,
+      "title": "Is Miss",
+      "type": "boolean"
+    },
+    "is_x": {
+      "default": false,
+      "title": "Is X",
+      "type": "boolean"
+    },
+    "note": {
+      "default": "",
+      "title": "Note",
+      "type": "string"
+    },
+    "ring": {
+      "anyOf": [
+        {
+          "maximum": 10,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "None = unscored (blank bale)",
+      "title": "Ring"
+    },
+    "shot_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shot At"
+    },
+    "shot_id": {
+      "title": "Shot Id",
+      "type": "string"
+    },
+    "vertical_offset_cm": {
+      "anyOf": [
+        {
+          "maximum": 200.0,
+          "minimum": -200.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Vertical Offset Cm"
+    }
+  },
+  "required": [
+    "end_id",
+    "index"
+  ],
+  "title": "Shot",
+  "type": "object"
+}

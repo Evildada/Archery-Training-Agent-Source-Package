@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "AccountRole": {
+      "description": "One person may hold several roles at once.\n\nAnswered at Q1 (docs/07-open-questions.md, 2026-10-08): the v1 user is *the pair*, and a\ncoach is usually also an archer. So a role is a capability, not an account type \u2014 the same\nperson can own templates (coach) and a ledger (archer), and the audit trail must say which\nhat was on when a record was written.",
+      "enum": [
+        "archer",
+        "coach",
+        "guardian"
+      ],
+      "title": "AccountRole",
+      "type": "string"
+    },
+    "BowType": {
+      "description": "v1 is compound-only by design decision (AGENTS.md rule 1).",
+      "enum": [
+        "compound"
+      ],
+      "title": "BowType",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Identity. Deliberately thin: only what changes behaviour or protects the archer.",
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "birth_year": {
+      "anyOf": [
+        {
+          "maximum": 2100,
+          "minimum": 1900,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Year only \u2014 never a full date of birth (minors are a primary user group).",
+      "title": "Birth Year"
+    },
+    "bow_type": {
+      "$ref": "#/$defs/BowType",
+      "default": "compound"
+    },
+    "coach_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Coach Id"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "dominant_eye": {
+      "anyOf": [
+        {
+          "enum": [
+            "right",
+            "left"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dominant Eye"
+    },
+    "guardian_consent": {
+      "default": false,
+      "description": "Required before any record leaves the device for an archer under 18.",
+      "title": "Guardian Consent",
+      "type": "boolean"
+    },
+    "handedness": {
+      "default": "RH",
+      "enum": [
+        "RH",
+        "LH"
+      ],
+      "title": "Handedness",
+      "type": "string"
+    },
+    "roles": {
+      "default": [
+        "archer"
+      ],
+      "description": "Capabilities this account holds. A coach who also shoots has both.",
+      "items": {
+        "$ref": "#/$defs/AccountRole"
+      },
+      "title": "Roles",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "display_name"
+  ],
+  "title": "Archer",
+  "type": "object"
+}
