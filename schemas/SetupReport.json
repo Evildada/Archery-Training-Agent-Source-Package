@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "Confidence": {
+      "description": "How a *number* was obtained. Required on every tool result (docs/04 \u00a710).",
+      "enum": [
+        "measured",
+        "derived",
+        "estimated",
+        "interpolated",
+        "unverified",
+        "insufficient_data"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Experiment": {
+      "additionalProperties": false,
+      "description": "A question the system cannot answer yet, and the smallest test that would unlock it.",
+      "properties": {
+        "needs": {
+          "title": "Needs",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "unlocks": {
+          "title": "Unlocks",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "needs",
+        "unlocks"
+      ],
+      "title": "Experiment",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "description": "One labelled statement about the setup.",
+      "properties": {
+        "assumptions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "basis": {
+          "description": "What this was computed from. Never empty.",
+          "title": "Basis",
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "confirming_test": {
+          "default": "",
+          "description": "The single range test that would raise this to MEASURED.",
+          "title": "Confirming Test",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "subject": {
+          "description": "Registry key where one exists, else a report-local name.",
+          "title": "Subject",
+          "type": "string"
+        },
+        "unit": {
+          "default": "",
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "subject",
+        "statement",
+        "confidence",
+        "basis"
+      ],
+      "title": "Finding",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The assessment. Deterministic: same inputs, same report, forever.",
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "changes_since_previous": {
+      "default": "",
+      "title": "Changes Since Previous",
+      "type": "string"
+    },
+    "experiments": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Experiment"
+      },
+      "title": "Experiments",
+      "type": "array"
+    },
+    "findings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "version_label": {
+      "title": "Version Label",
+      "type": "string"
+    },
+    "warnings": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archer_id",
+    "version_label"
+  ],
+  "title": "SetupReport",
+  "type": "object"
+}

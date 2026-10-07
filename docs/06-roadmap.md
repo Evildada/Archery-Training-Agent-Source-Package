@@ -27,10 +27,17 @@ end-to-end deterministic run with **no model provider configured**.
 
 ## M1 — Capture + setup assessment (deterministic, still no LLM)
 
+**Progress (2026-10-08)** — the setup half is built and tested; capture is next.
+* done: equipment as dated versions (`domain/equipment.py`, `store/sqlite.py` with append-only
+  enforced by SQLite triggers, `equipment.record|history|assess`), the setup report with its own
+  audit sensor and doctor probe, `archery-agent equipment record|history|assess`.
+* next: the per-end capture flow (ten-second budget), the session report, and the 200 synthetic
+  sessions with planted ground truth.
+
 **Deliverables**
-- Equipment records as dated versions, not overwrites: bow, release, arrow build. Changing a
-  module, a point weight or a draw length is an *event* (docs/03 §2), because the S5 regression
-  needs the change-point, not just the current state.
+- ~~Equipment records as dated versions, not overwrites~~ **done**: bow, release, arrow build, with
+  the delta computed at write time and stored on the version, because the S5 regression needs the
+  change-point and not just the current state.
 - **The setup report** (`equipment.assess`): current build against the archer's own history and
   the simulator's reference points — total mass, FOC, gr/lb, static spine fit, predicted sight
   marks. Every line carries `Confidence` (MEASURED / ESTIMATED / UNVERIFIED / INSUFFICIENT_DATA)
@@ -38,8 +45,10 @@ end-to-end deterministic run with **no model provider configured**.
   it** (bareshaft, paper tear, walk-back, chronograph). A claim nobody can test is not printed.
 - Capture: per-end phone taps (Q3) recording the mandatory set (Q5), self-estimated timings at
   `reliability=low` (Q6), with a ten-second-per-end budget treated as a hard constraint.
-- SQLite repos behind `store/` interfaces; the append-only `parameter_ledger` and
-  `equipment_version` tables; every write passing T0–T1 sensors before it lands.
+- ~~SQLite repos behind `store/` interfaces; the append-only `parameter_ledger` and
+  `equipment_version` tables; every write passing T0–T1 sensors before it lands.~~ **done**, with
+  the append-only guarantee checked against `sqlite_master` and probed transactionally by
+  `doctor` rather than asserted in a comment.
 - Session modes for blank bale / grouping / scoring, and the target-face geometry for
   `WA_40CM_3SPOT_V` and `WA_80CM_10RING`.
 - 200 synthetic sessions with known ground-truth effects, so S5 can be tested against a known

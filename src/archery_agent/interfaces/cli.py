@@ -11,10 +11,12 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 from archery_agent import __version__
 from archery_agent.agents import SPECS, Dispatcher, NullRunner
 from archery_agent.domain.enums import ParameterCategory, RiskLevel
+from archery_agent.domain.ids import new_id
 from archery_agent.domain.parameters import (
     CORE_PARAMETERS,
     REGISTRY,
@@ -29,8 +31,9 @@ from archery_agent.runtime.loop import CoachingLoop
 from archery_agent.sim.arrow import ArrowBuild, ShotContext, evaluate_arrow_setup
 from archery_agent.store.knowledge_base import KnowledgeBase
 from archery_agent.store.memory import InMemoryLedger
+from archery_agent.store.sqlite import SqliteStore, append_only_probe
 from archery_agent.tools.builtin import SUBAGENT_TOOLS, build_registry
-from archery_agent.tools.registry import ToolRegistry
+from archery_agent.tools.registry import ToolContext, ToolRegistry
 
 
 def _cmd_version(_: argparse.Namespace) -> int:
@@ -67,6 +70,99 @@ def _cmd_params(args: argparse.Namespace) -> int:
             if definition.notes:
                 print(f"- {definition.key}: {definition.notes}")
     return 0
+
+
+def _open_store(args: argparse.Namespace) -> SqliteStore:
+    """The CLI always uses the real database: an equipment history has to survive a restart."""
+    return SqliteStore(Path(args.db))
+
+
+def _equipment_context(store: SqliteStore, archer_id: str) -> ToolContext:
+    return ToolContext(run_id=new_id("run"), archer_id=archer_id, store=store)
+
+
+def _cmd_equipment(args: argparse.Namespace) -> int:
+    from archery_agent.tools.impl import equipment_tools
+
+    action = args.action
+    with _open_store(args) as store:
+        ctx = _equipment_context(store, args.archer)
+
+        if action == "record":
+            bow: dict[str, object] = {"brand": args.bow_brand, "model": args.bow_model}
+            arrow: dict[str, object] = {"brand": args.arrow_brand, "model": args.arrow_model}
+            for field, value in (
+                ("draw_weight_lb", args.draw_weight),
+                ("draw_length_in", args.draw_length),
+                ("let_off_pct", args.let_off),
+                ("brace_height_in", args.brace_height),
+                ("axle_to_axle_in", args.ata),
+            ):
+                if value is not None:
+                    bow[field] = value
+            for field, value in (
+                ("shaft_spine_thou", args.spine),
+                ("shaft_length_in", args.length),
+                ("shaft_mass_grains", args.shaft_mass),
+                ("point_mass_grains", args.point_mass),
+                ("insert_mass_grains", args.insert_mass),
+                ("nock_mass_grains", args.nock_mass),
+                ("measured_total_mass_grains", args.measured_mass),
+            ):
+                if value is not None:
+                    arrow[field] = value
+
+            payload = {
+                "archer_id": args.archer,
+                "bow": bow,
+                "arrow": arrow,
+                "reason": args.reason,
+                "effective_from": args.effective_from or "",
+            }
+            result = equipment_tools.handle_record(
+                equipment_tools.EquipmentRecordInput.model_validate(payload), ctx
+            )
+            print(result.context_block(char_budget=100_000))
+            return 0 if result.ok else 1
+
+        if action == "history":
+            result = equipment_tools.handle_history(
+                equipment_tools.EquipmentHistoryInput(archer_id=args.archer), ctx
+            )
+            if not result.ok:
+                print(result.context_block(char_budget=100_000))
+                return 1
+            # ToolResult.data is a JSON-ish union by design (registry.py); the CLI is the one
+            # place that knows the shape this tool promises.
+            data = cast(dict[str, Any], result.data)
+            versions = cast(list[dict[str, Any]], data["versions"])
+            if not versions:
+                print(f"no equipment recorded for {args.archer}")
+                return 0
+            for entry in versions:
+                print(f"v{entry['version']}  {entry['label']}")
+                print(f"     from {entry['effective_from'][:10]}  reason: {entry['reason'] or '-'}")
+                for change in entry["changes"]:
+                    print(f"     - {change}")
+            return 0
+
+        result = equipment_tools.handle_assess(
+            equipment_tools.EquipmentAssessInput(
+                archer_id=args.archer, ibo_fps=args.ibo, measured_speed_fps=args.speed
+            ),
+            ctx,
+        )
+        if not result.ok:
+            print(result.context_block(char_budget=100_000))
+            print(
+                "\nNothing to assess yet. Record the setup first:\n"
+                "  archery-agent equipment record --archer arc_1 --bow-brand ... "
+                "--bow-model ... --arrow-brand ... --arrow-model ... --spine 340",
+                file=sys.stderr,
+            )
+            return 1
+        print(cast(dict[str, Any], result.data)["rendered"])
+        return 0
 
 
 def _cmd_simulate(args: argparse.Namespace) -> int:
@@ -179,6 +275,45 @@ def _agent_contract_report(tool_registry: ToolRegistry) -> str:
     return f"{len(SPECS)} subagents; action spaces resolve; only capture/orchestrator holds a write"
 
 
+def _setup_report_probe() -> str:
+    """Build one setup report and audit it — the M1 promise checked on every `doctor` run."""
+    from archery_agent.domain.entities import ArrowSetup, Bow, EquipmentSet
+    from archery_agent.domain.equipment import record_version
+    from archery_agent.sensors.setup_assessment import audit_setup_report, build_setup_report
+    from archery_agent.sim.arrow import ShotContext
+
+    version = record_version(
+        archer_id="arc_doctor",
+        equipment=EquipmentSet(
+            archer_id="arc_doctor",
+            bow=Bow(brand="Doctor", model="Probe", draw_weight_lb=55.0, draw_length_in=28.5),
+            arrow=ArrowSetup(
+                brand="Doctor",
+                model="Probe",
+                shaft_length_in=28.5,
+                shaft_mass_grains=180.0,
+                point_mass_grains=100.0,
+            ),
+        ),
+    )
+    report = build_setup_report(
+        version,
+        shot=ShotContext(draw_weight_lb=55.0, draw_length_in=28.5, ibo_fps=310.0),
+    )
+    audit = audit_setup_report(report)
+    if not audit.ok:
+        raise AssertionError("; ".join(issue.message for issue in audit.errors))
+    estimates = [f for f in report.findings if f.needs_test]
+    if not estimates:
+        raise AssertionError(
+            "the probe report has no estimated finding, so the labelling rule was not exercised"
+        )
+    return (
+        f"{len(report.findings)} labelled finding(s), {len(estimates)} of them naming a test, "
+        f"{len(report.experiments)} open experiment(s)"
+    )
+
+
 def _cmd_doctor(_: argparse.Namespace) -> int:
     checks: list[tuple[str, str, str]] = []
 
@@ -206,6 +341,23 @@ def _cmd_doctor(_: argparse.Namespace) -> int:
         checks.append(("PASS", "agent contracts", _agent_contract_report(registry)))
     except Exception as exc:
         checks.append(("FAIL", "agent contracts", str(exc)))
+
+    try:
+        import tempfile
+
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            SqliteStore(Path(tmp) / "doctor-probe.db") as probe_store,
+        ):
+            notes = append_only_probe(probe_store)
+        checks.append(("PASS", "append-only storage", "; ".join(notes)))
+    except Exception as exc:
+        checks.append(("FAIL", "append-only storage", str(exc)))
+
+    try:
+        checks.append(("PASS", "setup report contract", _setup_report_probe()))
+    except Exception as exc:
+        checks.append(("FAIL", "setup report contract", str(exc)))
 
     from archery_agent.sensors.validators import validate_analysis_window
 
@@ -316,6 +468,42 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--events", default=None, help="write the run event log to this JSONL path")
     demo.add_argument("--verbose", action="store_true")
     demo.set_defaults(func=_cmd_demo)
+
+    equipment = sub.add_parser(
+        "equipment",
+        help="record and inspect the equipment history; assess the current setup",
+    )
+    equipment.add_argument(
+        "action", choices=["record", "history", "assess"], nargs="?", default="assess"
+    )
+    equipment.add_argument("--archer", required=True, help="archer id")
+    equipment.add_argument("--db", default="data/archery.db", help="SQLite database path")
+    equipment.add_argument("--bow-brand", default="unknown")
+    equipment.add_argument("--bow-model", default="unknown")
+    equipment.add_argument("--arrow-brand", default="unknown")
+    equipment.add_argument("--arrow-model", default="unknown")
+    equipment.add_argument("--draw-weight", type=float, default=None)
+    equipment.add_argument("--draw-length", type=float, default=None)
+    equipment.add_argument("--let-off", type=float, default=None)
+    equipment.add_argument("--brace-height", type=float, default=None)
+    equipment.add_argument("--ata", type=float, default=None)
+    equipment.add_argument("--spine", type=float, default=None, help="static spine, thou")
+    equipment.add_argument("--length", type=float, default=None, help="shaft length, in")
+    equipment.add_argument("--shaft-mass", type=float, default=None, help="shaft mass, gr")
+    equipment.add_argument("--point-mass", type=float, default=None)
+    equipment.add_argument("--insert-mass", type=float, default=None)
+    equipment.add_argument("--nock-mass", type=float, default=None)
+    equipment.add_argument(
+        "--measured-mass",
+        type=float,
+        default=None,
+        help="weighed finished-arrow mass — turns estimates into measurements",
+    )
+    equipment.add_argument("--effective-from", default=None, help="ISO date, e.g. 2026-03-01")
+    equipment.add_argument("--reason", default="", help="why the setup changed")
+    equipment.add_argument("--ibo", type=float, default=None, help="for `assess`: bow IBO rating")
+    equipment.add_argument("--speed", type=float, default=None, help="for `assess`: chronograph")
+    equipment.set_defaults(func=_cmd_equipment)
 
     sim = sub.add_parser("simulate", help="arrow setup calculator")
     sim.add_argument("--draw-weight", type=float, required=True)

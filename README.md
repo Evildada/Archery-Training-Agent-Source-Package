@@ -22,6 +22,7 @@ five remaining questions (Q12-Q16) are M4-M5 scope and keep their documented def
 $ make setup && make check          # lint · types · architecture · schemas · tests · eval gates
 $ archery-agent doctor              # 11/11 checks: the harness auditing itself
 $ archery-agent demo                # one full deterministic coaching turn, no model called
+$ archery-agent equipment assess --archer arc_1 --ibo 315   # the setup report
 $ archery-agent simulate --help     # the arrow/bow calculator
 ```
 
@@ -35,11 +36,12 @@ $ archery-agent simulate --help     # the arrow/bow calculator
 | Sensors: validators, statistics with effect sizes and BH-corrected q-values, citation rules, standard executability, load (ACWR), safety screen | `sensors/` | `tests/test_sensors_*.py` |
 | Append-only ledger, snapshots, knowledge base | `store/` | `tests/test_store_and_tools.py` |
 | Tool registry with per-tool risk levels, approval gates, subagent action spaces | `tools/` | same |
+| Equipment as dated versions + the setup report (every estimate names its range test) | `domain/equipment.py`, `store/sqlite.py`, `sensors/setup_assessment.py` | `tests/test_equipment_versions.py`, `tests/test_setup_report.py` |
 | Subagent contracts, deterministic routing, contract-enforcing dispatcher | `agents/` | `tests/test_agents.py` |
 | Coaching loop: budgets, hooks, guards, answer gate, event log | `runtime/` | `tests/test_runtime.py` |
 | CLI: `doctor`, `demo`, `params`, `simulate`, `version` | `interfaces/cli.py` | `tests/test_evals_and_cli.py` |
 | 5 deterministic eval suites with published gates, wired into `make check` | `evals/` | `scripts/run_evals.py` |
-| 42 exported JSON Schemas, drift-checked in CI | `schemas/` | `make check-schemas` |
+| 51 exported JSON Schemas, drift-checked in CI | `schemas/` | `make check-schemas` |
 
 ## The five non-negotiables
 

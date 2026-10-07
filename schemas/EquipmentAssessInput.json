@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Assess the current setup. All physics inputs are optional: missing ones are reported.",
+  "properties": {
+    "archer_id": {
+      "title": "Archer Id",
+      "type": "string"
+    },
+    "ibo_fps": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "maximum": 400.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ibo Fps"
+    },
+    "measured_speed_fps": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0.0,
+          "maximum": 400.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Measured Speed Fps"
+    },
+    "sight_marks": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Sight Marks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archer_id"
+  ],
+  "title": "EquipmentAssessInput",
+  "type": "object"
+}

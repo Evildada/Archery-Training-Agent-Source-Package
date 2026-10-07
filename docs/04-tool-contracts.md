@@ -19,6 +19,18 @@ artifacts only) · `DENY` (never offered to the model).
 | `athlete.read_profile` | READ | `{}` | `ShooterProfile` + current `equipment_set_id` + active `cycle_template_id` |
 | `athlete.update_profile` | WRITE_DRAFT | partial profile | `ChangeProposal` (diff + effective date) — **profile changes are events, not overwrites** |
 | `athlete.availability` | READ | `date_range` | `Availability{weekday → minutes}` |
+| `equipment.record` | WRITE_DRAFT | bow + arrow (+ optional release), effective date, reason | `EquipmentVersion` — append-only, and the registry rows land in the ledger with `equipment_set_id` so the change-point is visible to the statistics |
+| `equipment.history` | READ | `archer_id` | every version, oldest first, with its computed change list |
+| `equipment.assess` | READ | `archer_id` (+ optional IBO/chronograph, sight marks) | `SetupReport` — labelled findings, each estimate naming the range test that would settle it, plus the experiments that are not answerable yet |
+
+### The setup-report contract (M1)
+
+`equipment.assess` is the first tool whose *output shape* is a product promise, so it is asserted
+by a sensor rather than described here: every finding carries a `confidence`, a `basis`, and —
+whenever the confidence is weaker than `measured` — a `confirming_test`. A finding that cannot
+name a test is refused at construction (`sensors/setup_assessment.py::_finding`), and the whole
+report is re-audited before it is returned. `archery-agent doctor` builds one and audits it on
+every run, so the promise cannot quietly rot.
 
 ## 2. Capture
 

@@ -194,6 +194,35 @@ class ArrowSetup(DomainRecord):
             )
         return self
 
+    @property
+    def component_mass_grains(self) -> float | None:
+        """Sum of the entered components, or None when the shaft mass is unknown."""
+        if self.shaft_mass_grains is None:
+            return None
+        return float(self.shaft_mass_grains) + sum(
+            float(value or 0.0)
+            for value in (
+                self.insert_mass_grains,
+                self.point_mass_grains,
+                self.nock_mass_grains,
+            )
+        )
+
+    @property
+    def is_weighed(self) -> bool:
+        """True when somebody actually put the arrow on a scale."""
+        return self.measured_total_mass_grains is not None
+
+    def effective_total_mass_grains(self) -> float | None:
+        """Measured mass if it exists, else the summed components, else nothing.
+
+        The report labels these two cases differently (MEASURED vs ESTIMATED) and names a
+        different confirming test for each, so the caller must not collapse them here.
+        """
+        if self.measured_total_mass_grains is not None:
+            return float(self.measured_total_mass_grains)
+        return self.component_mass_grains
+
 
 class EquipmentSet(DomainRecord):
     """A versioned snapshot. Sessions point at a set, and sets are retired, never edited."""

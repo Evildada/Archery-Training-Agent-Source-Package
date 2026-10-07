@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from archery_agent.domain.enums import RiskLevel
 from archery_agent.tools.impl import (
+    equipment_tools,
     guard_tools,
     knowledge_tools,
     ledger_tools,
@@ -20,6 +21,7 @@ from archery_agent.tools.registry import ToolRegistry, ToolSpec
 #: The ceiling of what exists at all. Anything not registered here does not exist for the model.
 ALL_SPECS: tuple[ToolSpec, ...] = (
     *guard_tools.SPECS,
+    *equipment_tools.SPECS,
     *ledger_tools.SPECS,
     *sim_tools.SPECS,
     *standards_tools.SPECS,
@@ -33,6 +35,8 @@ SUBAGENT_TOOLS: dict[str, tuple[str, ...]] = {
         "guard.discipline_scope",
         "ledger.summary",
         "ledger.read",
+        "equipment.history",
+        "equipment.assess",
         "standards.suggest",
         "standards.evaluate",
     ),
@@ -40,6 +44,7 @@ SUBAGENT_TOOLS: dict[str, tuple[str, ...]] = {
         "guard.medical_screen",
         "ledger.append",
         "ledger.summary",
+        "equipment.record",
     ),
     "cycle_analyst": (
         "ledger.read",
@@ -49,6 +54,8 @@ SUBAGENT_TOOLS: dict[str, tuple[str, ...]] = {
         "standards.evaluate",
     ),
     "equip_tech": (
+        "equipment.history",
+        "equipment.assess",
         "sim.arrow_setup",
         "sim.spine_check",
         "sim.sight_marks",

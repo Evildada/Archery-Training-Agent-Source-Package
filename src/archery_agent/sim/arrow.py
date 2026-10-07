@@ -22,8 +22,16 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from archery_agent.domain.entities import ArrowSetup
 from archery_agent.domain.enums import Confidence
 from archery_agent.domain.units import kinetic_energy_ft_lb, momentum_lb_s
+
+#: The two grains-per-pound thresholds, named because they mean different things and were
+#: previously the same magic number in two places. 5 gr/lb is the widely quoted *guidance*; 4 is
+#: the point past which dry-fire risk is real enough that the harness warns loudly rather than
+#: mentioning it. Do not merge them.
+COMMON_MIN_GRAINS_PER_POUND: float = 5.0
+DRY_FIRE_RISK_GRAINS_PER_POUND: float = 4.0
 
 #: Default mass positions (inches from the nock end of the shaft).
 DEFAULT_VANE_POSITION_IN: float = 1.5
@@ -64,6 +72,41 @@ class ArrowBuild(BaseModel):
             + self.nock_mass_grains
             + self.vane_mass_grains
         )
+
+
+def arrow_build_from_setup(setup: ArrowSetup) -> ArrowBuild:
+    """Bridge a stored :class:`~archery_agent.domain.entities.ArrowSetup` into a sim build.
+
+    Raises ``ValueError`` with the missing field named rather than guessing a default: an
+    invented shaft mass silently corrupts FOC, grains per pound and speed all at once.
+    """
+    if setup.shaft_length_in is None or setup.shaft_mass_grains is None:
+        missing = [
+            name
+            for name, value in (
+                ("shaft_length_in", setup.shaft_length_in),
+                ("shaft_mass_grains", setup.shaft_mass_grains),
+            )
+            if value is None
+        ]
+        raise ValueError("missing " + " and ".join(missing))
+    return ArrowBuild(
+        brand=setup.brand,
+        model=setup.model,
+        shaft_length_in=float(setup.shaft_length_in),
+        shaft_mass_grains=float(setup.shaft_mass_grains),
+        insert_mass_grains=float(setup.insert_mass_grains or 0.0),
+        point_mass_grains=float(setup.point_mass_grains or 0.0),
+        nock_mass_grains=float(setup.nock_mass_grains or 0.0),
+        measured_total_mass_grains=(
+            float(setup.measured_total_mass_grains)
+            if setup.measured_total_mass_grains is not None
+            else None
+        ),
+        static_spine_thou=(
+            float(setup.shaft_spine_thou) if setup.shaft_spine_thou is not None else None
+        ),
+    )
 
 
 def total_mass_grains(build: ArrowBuild) -> tuple[float, Confidence, tuple[str, ...]]:
@@ -240,11 +283,12 @@ def evaluate_arrow_setup(
 
     warnings: list[str] = []
     grains_per_pound = mass / context.draw_weight_lb
-    if grains_per_pound < 4.0:
+    if grains_per_pound < DRY_FIRE_RISK_GRAINS_PER_POUND:
         warnings.append(
-            f"{grains_per_pound:.2f} gr/lb is below the common ~5 gr/lb guidance — "
-            "dry-fire risk and string/vibration wear rise sharply below 5 gr/lb; check the "
-            "bow manufacturer's minimum before shooting this"
+            f"{grains_per_pound:.2f} gr/lb is below the common "
+            f"~{COMMON_MIN_GRAINS_PER_POUND:g} gr/lb guidance — dry-fire risk and string/vibration "
+            f"wear rise sharply below {COMMON_MIN_GRAINS_PER_POUND:g} gr/lb; check the bow "
+            "manufacturer's minimum before shooting this"
         )
     if grains_per_pound > 8.0:
         warnings.append(
